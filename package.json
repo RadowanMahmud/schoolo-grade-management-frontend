@@ -1,0 +1,45 @@
+{
+  "name": "basarhimager",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt --port 3001",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "lint:js": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lint": "npm run lint:js"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.12.5",
+    "@nuxtjs/firebase": "^7.4.1",
+    "bootstrap": "^4.6.0",
+    "core-js": "^3.8.3",
+    "firebase": "^8.2.3",
+    "fuse.js": "^6.4.6",
+    "jquery": "^3.5.1",
+    "nuxt": "^2.14.12",
+    "shards-ui": "^3.0.0",
+    "shards-vue": "^1.0.7",
+    "vee-validate": "^3.4.5",
+    "vue-ads-pagination": "^2.1.7",
+    "vue-kindergarten": "^0.3.3",
+    "vue-notification": "^1.3.20",
+    "vue-select": "^3.11.2",
+    "vue2-datepicker": "^3.8.2"
+  },
+  "devDependencies": {
+    "@nuxtjs/eslint-config": "^3.1.0",
+    "@nuxtjs/eslint-module": "^2.0.0",
+    "@nuxtjs/moment": "^1.6.1",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.18.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-plugin-nuxt": "^1.0.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "node-sass": "^4.9.0",
+    "prettier": "^2.2.1",
+    "sass-loader": "^7.0.1",
+    "vue-template-compiler": "^2.5.17"
+  }
+}
