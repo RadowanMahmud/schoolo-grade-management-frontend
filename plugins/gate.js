@@ -1,6 +1,6 @@
 const pupilPermissions = []
 const teacherPermissions = []
-const adminPermissions = ['createClass', 'createSubject', 'createUser']
+const adminPermissions = ['createClass', 'createSubject', 'CreateUser']
 
 const superAdminPermission = ['createAdmin', ...adminPermissions]
 const permissions = {

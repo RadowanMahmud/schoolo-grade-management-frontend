@@ -36,21 +36,27 @@ export default function () {
           title: 'Pupil',
           permission: 'CreateUser',
           htmlBefore: '<i class="bx bx-money" style="font-size: 1.1rem"></i>',
-          to: {},
+          to: {
+            name: 'subject',
+          },
         },
         {
           title: 'Teacher',
           permission: 'CreateUser',
           htmlBefore:
             '<i class="bx bx-dollar-circle" style="font-size: 1.1rem"></i>',
-          to: {},
+          to: {
+            name: 'subject',
+          },
         },
         {
           title: 'Admin',
           permission: 'CreateUser',
           htmlBefore:
             '<i class="bx bx-dollar-circle" style="font-size: 1.1rem"></i>',
-          to: {},
+          to: {
+            name: 'subject',
+          },
         },
       ],
     },
