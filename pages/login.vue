@@ -15,7 +15,7 @@
               </div>
             </div>
             <d-form-input
-              v-model="loginForm.userName"
+              v-model="loginForm.username"
               class="form-control"
               type="text"
               placeholder="User Name"
@@ -54,7 +54,7 @@ export default {
   data() {
     return {
       loginForm: {
-        userName: '',
+        username: '',
         password: '',
       },
     }
@@ -65,7 +65,7 @@ export default {
       this.$axios.post('users/login', this.loginForm).then((response) => {
         if (response.status === 200) {
           this.storeUser(response.data)
-          this.$router.push({ name: 'bookings' })
+          this.$router.push('/')
         }
       })
     },

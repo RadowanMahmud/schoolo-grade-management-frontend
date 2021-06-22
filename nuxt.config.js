@@ -68,20 +68,14 @@ export default {
   ],
   env: {
     NUXT_ENV_BACKEND_URL:
-      process.env.NODE_ENV === 'production'
-        ? 'https://backend.basarhimager.com'
-        : 'http://127.0.0.1:8000',
+      process.env.NODE_ENV === 'production' ? '' : 'http://127.0.0.1:8000',
     NUXT_ENV_BASE_URL:
-      process.env.NODE_ENV === 'production'
-        ? 'https://basarhimager.com'
-        : 'http://127.0.0.1:3000',
+      process.env.NODE_ENV === 'production' ? '' : 'http://127.0.0.1:3000',
   },
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {
     baseURL:
-      process.env.NODE_ENV !== 'production'
-        ? 'http://127.0.0.1:8000/api'
-        : 'https://backend.basarhimager.com/api',
+      process.env.NODE_ENV !== 'production' ? 'http://127.0.0.1:8000/api/' : '',
   },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)

@@ -1,7 +1,5 @@
 <template>
   <d-container fluid>
-    <notifications position="top right" />
-
     <d-row>
       <!-- Main Sidebar -->
       <LayoutMainSidebar :items="sidebarItems" />

@@ -1,50 +1,13 @@
-const storeManagerPermissions = [
-  'viewBooking',
-  'viewClient',
-  'createPotatoStoreReceipt',
-  'createGatepass',
-  'createLoading',
-  'createMachinepart',
-  'createMachinepartEntry',
-  'createChangingInformationEntry',
-  'createInventory',
-]
-const accountManagerPermissions = [
-  'createBooking',
-  'createDelivery',
-  'createReceive',
-  'createLoandisbursement',
-  'createLoancollection',
-  'createSalary',
-  'createEmployeeLoan',
-  'createExpense',
-  'createDailyexpense',
-  'createBank',
-  'createBankdeposit',
-  'generateReport',
-  ...storeManagerPermissions,
-]
-const adminManagerPermissions = [
-  'createAccountmanager',
-  'createStoremanager',
-  'createClient',
-  'createWorker',
-  'settings',
-  ...accountManagerPermissions,
-]
-const adminPermissions = [
-  'createAdminmanager',
-  'updateBagNo',
-  ...adminManagerPermissions,
-]
+const pupilPermissions = []
+const teacherPermissions = []
+const adminPermissions = ['createClass', 'createSubject', 'createUser']
+
 const superAdminPermission = ['createAdmin', ...adminPermissions]
 const permissions = {
   super_admin: superAdminPermission,
   admin: adminPermissions,
-  manager_admin: adminManagerPermissions,
-  manager_account: accountManagerPermissions,
-  manager_store: storeManagerPermissions,
-  worker: [],
+  teacher: teacherPermissions,
+  pupil: pupilPermissions,
 }
 export default (context, inject) => {
   const checkIfUserHasPermission = function (permission) {

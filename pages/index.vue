@@ -3,7 +3,9 @@
     <!-- Page Header -->
     <div class="page-header row no-gutters py-4">
       <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-        <span class="text-uppercase page-subtitle">Basar Himager</span>
+        <span class="text-uppercase page-subtitle"
+          >Student Grade Management</span
+        >
         <h3 class="page-title">Dashboard</h3>
       </div>
     </div>
@@ -12,55 +14,29 @@
     <d-row>
       <d-col cols="3">
         <d-button
-          v-if="this.$hasPermission('createBooking')"
+          v-if="this.$hasPermission('createClass')"
           size="sm"
           theme="success"
-          @click="$router.push({ name: 'bookings-create' })"
+          @click="$router.push({ name: 'class' })"
         >
-          <i class="bx bx-plus mr-2"></i>Create Booking
+          <i class="bx bx-plus mr-2"></i>List of Classes
         </d-button>
       </d-col>
       <d-col cols="2">
         <d-button
-          v-if="this.$hasPermission('createReceive')"
+          v-if="this.$hasPermission('createSubject')"
           size="sm"
-          @click="$router.push({ name: 'receives-create' })"
+          @click="$router.push({ name: 'subject' })"
         >
-          <i class="bx bx-plus mr-2"></i>Create Receive
+          <i class="bx bx-plus mr-2"></i>List Of Subjects
         </d-button>
-      </d-col>
-      <d-col cols="2">
-        <d-button
-          v-if="this.$hasPermission('createDelivery')"
-          size="sm"
-          theme="info"
-          @click="$router.push({ name: 'deliveries-create' })"
-        >
-          <i class="bx bx-plus mr-2"></i>Create Delivery
-        </d-button>
-      </d-col>
-    </d-row>
-
-    <br />
-    <br />
-    <h5>Useful Reports</h5>
-    <d-row>
-      <d-col cols="4">
-        <SalaryReportCard />
-      </d-col>
-      <d-col cols="4">
-        <ExpenseReport />
       </d-col>
     </d-row>
   </div>
 </template>
 
 <script>
-import SalaryReportCard from '@/components/report/SalaryReportCard'
-import ExpenseReport from '@/components/report/DailyExpenseReport'
-export default {
-  components: { ExpenseReport, SalaryReportCard },
-}
+export default {}
 </script>
 
 <style></style>

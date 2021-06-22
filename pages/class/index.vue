@@ -1,23 +1,24 @@
 <template>
   <div
-    v-if="$hasPermission('viewBooking')"
+    v-if="$hasPermission('createClass')"
     class="main-content-container container-fluid px-4"
   >
     <!-- Page Header -->
     <div class="page-header row no-gutters py-4">
       <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-        <span class="text-uppercase page-subtitle">Recent Bookings</span>
-        <h3 class="page-title">Booking List</h3>
+        <span class="text-uppercase page-subtitle"
+          >List of All the Classes</span
+        >
+        <h3 class="page-title">Class List</h3>
       </div>
     </div>
 
     <d-row align-h="end" class="mx-auto">
       <d-button
-        v-if="this.$hasPermission('createBooking')"
+        v-if="this.$hasPermission('createClass')"
         outline
         size="sm"
         theme="success"
-        @click="$router.push({ name: 'bookings-create' })"
       >
         <i class="bx bx-plus mr-2"></i> Create
       </d-button>
@@ -28,14 +29,8 @@
         <table class="table mb-0">
           <thead class="bg-light">
             <tr>
-              <th scope="col" class="border-0">Client</th>
-              <th scope="col" class="border-0">Booking No.</th>
-              <th scope="col" class="border-0">Time</th>
-              <th scope="col" class="border-0">Type</th>
-              <th scope="col" class="border-0">Quantity</th>
-              <th scope="col" class="border-0">Advance Payment</th>
-              <th scope="col" class="border-0">Discount</th>
-              <th scope="col" class="border-0">Action(s)</th>
+              <th scope="col" class="border-0">id</th>
+              <th scope="col" class="border-0">Name</th>
             </tr>
           </thead>
           <tbody>

@@ -24,10 +24,10 @@
               class="d-inline-block align-top mr-1"
               style="max-width: 25px"
               src="/images/bhl.png"
-              alt="Shards Dashboard"
+              alt="SGM Dashboard"
             />
             <span v-if="!hideLogoText" class="d-none d-md-inline ml-1"
-              >Basar Himager</span
+              >Student Grade Management</span
             >
           </div>
         </d-link>
