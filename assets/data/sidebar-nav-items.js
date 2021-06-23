@@ -31,34 +31,37 @@ export default function () {
       permission: 'CreateUser',
       htmlBefore:
         '<i class="bx bx-message-square-detail" style="font-size: 1.2rem"></i>',
-      items: [
-        {
-          title: 'Pupil',
-          permission: 'CreateUser',
-          htmlBefore: '<i class="bx bx-money" style="font-size: 1.1rem"></i>',
-          to: {
-            name: 'subject',
-          },
-        },
-        {
-          title: 'Teacher',
-          permission: 'CreateUser',
-          htmlBefore:
-            '<i class="bx bx-dollar-circle" style="font-size: 1.1rem"></i>',
-          to: {
-            name: 'subject',
-          },
-        },
-        {
-          title: 'Admin',
-          permission: 'CreateUser',
-          htmlBefore:
-            '<i class="bx bx-dollar-circle" style="font-size: 1.1rem"></i>',
-          to: {
-            name: 'subject',
-          },
-        },
-      ],
+      to: {
+        name: 'users',
+      },
+      // items: [
+      //   {
+      //     title: 'Pupil',
+      //     permission: 'CreateUser',
+      //     htmlBefore: '<i class="bx bx-money" style="font-size: 1.1rem"></i>',
+      //     to: {
+      //       name: 'subject',
+      //     },
+      //   },
+      //   {
+      //     title: 'Teacher',
+      //     permission: 'CreateUser',
+      //     htmlBefore:
+      //       '<i class="bx bx-dollar-circle" style="font-size: 1.1rem"></i>',
+      //     to: {
+      //       name: 'subject',
+      //     },
+      //   },
+      //   {
+      //     title: 'Admin',
+      //     permission: 'CreateUser',
+      //     htmlBefore:
+      //       '<i class="bx bx-dollar-circle" style="font-size: 1.1rem"></i>',
+      //     to: {
+      //       name: 'subject',
+      //     },
+      //   },
+      // ],
     },
     {
       title: 'Message',
