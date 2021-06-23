@@ -35,10 +35,23 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="booking in bookings" :key="booking.id">
-              <td>{{ booking.client.name }} ({{ booking.client.phone }})</td>
+            <tr v-for="classList in classes" :key="classList.id">
+              <td>{{ classList.id }}</td>
               <td>
-                {{ booking.booking_no }}
+                {{ classList.name }}
+              </td>
+              <td width="15%" align="right">
+                <d-row style="margin-right: 2px; margin-left: 8px">
+                  <d-button size="sm" theme="success" class="mr-2"
+                    ><i class="bx bx-edit"></i> <b></b
+                  ></d-button>
+                  <d-button size="sm" theme="outline-danger" class="mr-2"
+                    ><i class="bx bx-stats"></i> <b></b
+                  ></d-button>
+                  <d-button size="sm" theme="info" class="mr-2"
+                    ><i class="bx bx-show"></i> <b></b
+                  ></d-button>
+                </d-row>
               </td>
             </tr>
           </tbody>
@@ -58,7 +71,7 @@
           @page-change="
             () => {
               currentPage = button.page
-              fetchBookings()
+              fetchClasses()
             }
           "
         />
@@ -73,27 +86,24 @@ export default {
     currentPage: 0,
     perPage: 1,
     totalRows: 0,
-    bookings: [],
+    classes: [],
   }),
   computed: {
     getTotalPage: () =>
       Math.ceil(parseFloat('' + this.totalRows) / this.perPage),
   },
   mounted() {
-    this.fetchBookings()
+    this.fetchClasses()
   },
   methods: {
-    fetchBookings() {
+    fetchClasses() {
       this.$axios
-        .get(`bookings?page=${this.currentPage + 1}`)
+        .get(`classes?page=${this.currentPage + 1}`)
         .then((response) => {
-          this.bookings = response.data.data
+          this.classes = response.data.data
           this.perPage = response.data.per_page
           this.totalRows = response.data.total
         })
-    },
-    getReportURL(query) {
-      return `${process.env.NUXT_ENV_BACKEND_URL}/${query}`
     },
   },
 }
