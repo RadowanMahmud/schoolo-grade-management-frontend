@@ -17,6 +17,7 @@
         outline
         size="sm"
         theme="success"
+        @click="userAddModal = true"
       >
         <i class="bx bx-plus mr-2"></i> Create
       </d-button>
@@ -48,15 +49,17 @@
                 {{ user.surname }}
               </td>
               <td>
-                {{ user.role }}
+                <d-badge :theme="getTheme(user.roles[0].name)">
+                  {{ user.roles[0].name }}
+                </d-badge>
               </td>
               <td width="15%" align="right">
                 <d-row style="margin-right: 2px; margin-left: 25%">
-                  <d-button size="sm" theme="success" class="mr-2"
+                  <d-button size="sm" theme="info" class="mr-2"
                     ><i class="bx bx-edit"></i> <b></b
                   ></d-button>
                   <d-button size="sm" theme="outline-danger" class="mr-2"
-                    ><i class="bx bx-stats"></i> <b></b
+                    ><i class="bx bx-trash"></i> <b></b
                   ></d-button>
                 </d-row>
               </td>
@@ -84,10 +87,88 @@
         />
       </template>
     </VueAdsPagination>
+
+    <d-modal v-if="userAddModal" @close="userAddModal = false">
+      <d-modal-header>
+        <d-modal-title>Add New User</d-modal-title>
+      </d-modal-header>
+      <d-modal-body>
+        <d-form @submit.prevent="addUser">
+          <div class="row pb-2 ml-2">
+            <span class="my-auto mr-2"><b> User Name: </b></span>
+            <d-form-input
+              v-model="userCreateForm.username"
+              placeholder="User name must be unique"
+              required
+            />
+          </div>
+
+          <div class="row pb-2 ml-2">
+            <span class="my-auto mr-2"><b> Fore Name: </b></span>
+            <d-form-input
+              v-model="userCreateForm.forename"
+              placeholder="Enter fore name of user"
+              required
+            />
+          </div>
+
+          <div class="row pb-2 ml-2">
+            <span class="my-auto mr-2"><b> Sur Name: </b></span>
+            <d-form-input
+              v-model="userCreateForm.surname"
+              placeholder="Enter Sur name of user"
+              required
+            />
+          </div>
+
+          <div class="row pb-2 ml-2">
+            <span class="my-auto mr-2"><b> Password: </b></span>
+            <d-form-input
+              v-model="userCreateForm.password"
+              type="password"
+              placeholder="Enter Password"
+              required
+            />
+          </div>
+          <div
+            v-if="
+              userCreateForm.password.length > 0 &&
+              userCreateForm.password.length < 8
+            "
+            style="color: red; padding: 5px 20px 5px 20px; font-size: 10px"
+          >
+            Password Must Contain More Than 8 letters
+          </div>
+
+          <div class="row pb-2 ml-2">
+            <span class="my-auto mr-2"><b> Select User Role: </b></span>
+            <d-form-select
+              v-model="userCreateForm.role"
+              :options="role_options"
+            ></d-form-select>
+          </div>
+
+          <div class="row pb-2 ml-2">
+            <d-button
+              type="submit"
+              :disabled="userCreateForm.password.length < 8"
+              >Save</d-button
+            >
+          </div>
+        </d-form>
+      </d-modal-body>
+    </d-modal>
   </div>
 </template>
 
 <script>
+const userCreateFormTemplate = {
+  username: '',
+  forename: '',
+  surname: '',
+  password: '',
+  role: null,
+}
 export default {
   name: 'Users',
   data: () => ({
@@ -95,6 +176,13 @@ export default {
     perPage: 1,
     totalRows: 0,
     users: [],
+    userAddModal: false,
+    userCreateForm: { ...userCreateFormTemplate },
+    role_options: [
+      { value: 'admin', text: 'Admin' },
+      { value: 'teacher', text: 'Teacher' },
+      { value: 'pupil', text: 'Pupil' },
+    ],
   }),
   computed: {
     getTotalPage: () =>
@@ -112,6 +200,26 @@ export default {
           this.perPage = response.data.per_page
           this.totalRows = response.data.total
         })
+    },
+    addUser() {
+      this.$axios.post('users', this.userCreateForm).then((res) => {
+        if (res.status === 201) {
+          this.userAddModal = false
+          this.fetchUsers()
+          this.userCreateForm = { ...userCreateFormTemplate }
+        }
+      })
+    },
+    getTheme(role) {
+      if (role === 'admin') {
+        return 'danger'
+      } else if (role === 'teacher') {
+        return 'success'
+      } else if (role === 'pupil') {
+        return 'info'
+      } else {
+        return 'primary'
+      }
     },
   },
 }

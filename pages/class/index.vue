@@ -19,6 +19,7 @@
         outline
         size="sm"
         theme="success"
+        @click="classAddModal = true"
       >
         <i class="bx bx-plus mr-2"></i> Create
       </d-button>
@@ -29,29 +30,22 @@
         <table class="table mb-0">
           <thead class="bg-light">
             <tr>
-              <th scope="col" class="border-0">id</th>
               <th scope="col" class="border-0">Name</th>
               <th scope="col" class="border-0">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="classList in classes" :key="classList.id">
-              <td>{{ classList.id }}</td>
               <td>
                 {{ classList.name }}
               </td>
-              <td width="15%" align="right">
-                <d-row style="margin-right: 2px; margin-left: 8px">
-                  <d-button size="sm" theme="success" class="mr-2"
-                    ><i class="bx bx-edit"></i> <b></b
-                  ></d-button>
-                  <d-button size="sm" theme="outline-danger" class="mr-2"
-                    ><i class="bx bx-stats"></i> <b></b
-                  ></d-button>
-                  <d-button size="sm" theme="info" class="mr-2"
-                    ><i class="bx bx-show"></i> <b></b
-                  ></d-button>
-                </d-row>
+              <td style="align-content: center">
+                <d-button size="sm" theme="success" class="mr-2"
+                  ><i class="bx bx-edit"></i> <b></b
+                ></d-button>
+                <d-button size="sm" theme="outline-danger" class="mr-2"
+                  ><i class="bx bx-trash"></i> <b></b
+                ></d-button>
               </td>
             </tr>
           </tbody>
@@ -77,9 +71,33 @@
         />
       </template>
     </VueAdsPagination>
+    <d-modal v-if="classAddModal" @close="classAddModal = false">
+      <d-modal-header>
+        <d-modal-title>Add New Class</d-modal-title>
+      </d-modal-header>
+      <d-modal-body>
+        <d-form @submit.prevent="addClass">
+          <div class="row pb-2 ml-2">
+            <span class="my-auto mr-2"><b> Class Name: </b></span>
+            <d-form-input
+              v-model="classCreateForm.name"
+              placeholder="Class name must be unique"
+              required
+            />
+          </div>
+
+          <div class="row pb-2 ml-2">
+            <d-button type="submit">Save</d-button>
+          </div>
+        </d-form>
+      </d-modal-body>
+    </d-modal>
   </div>
 </template>
 <script>
+const classCreateFormTemplate = {
+  name: '',
+}
 export default {
   name: 'Class',
   data: () => ({
@@ -87,6 +105,8 @@ export default {
     perPage: 1,
     totalRows: 0,
     classes: [],
+    classAddModal: false,
+    classCreateForm: { ...classCreateFormTemplate },
   }),
   computed: {
     getTotalPage: () =>
@@ -103,6 +123,20 @@ export default {
           this.classes = response.data.data
           this.perPage = response.data.per_page
           this.totalRows = response.data.total
+        })
+    },
+    addClass() {
+      this.$axios
+        .post('classes', this.classCreateForm)
+        .then((response) => {
+          if (response.status === 201) {
+            this.classAddModal = false
+            this.fetchClasses()
+            this.classCreateForm = { ...classCreateFormTemplate }
+          }
+        })
+        .catch((err) => {
+          alert(err.toString())
         })
     },
   },
