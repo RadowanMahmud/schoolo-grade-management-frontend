@@ -32,7 +32,16 @@
                     {{ sub.teacher_id }}
                   </td>
                   <td style="align-content: center">
-                    <d-button size="sm" theme="success" class="mr-2"
+                    <d-button
+                      size="sm"
+                      theme="success"
+                      class="mr-2"
+                      @click="
+                        $router.push({
+                          name: 'class-tests-subject_id',
+                          params: { subject_id: sub.id },
+                        })
+                      "
                       ><i class="bx bx-show"></i> <b> Tests</b></d-button
                     >
                   </td>

@@ -1,5 +1,10 @@
 const pupilPermissions = []
-const teacherPermissions = ['viewClass', 'addPupil', 'createSubject']
+const teacherPermissions = [
+  'viewClass',
+  'addPupil',
+  'createSubject',
+  'modifyTests',
+]
 const adminPermissions = ['createClass', 'CreateUser', ...teacherPermissions]
 
 const superAdminPermission = ['createAdmin', ...adminPermissions]

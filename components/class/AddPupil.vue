@@ -7,7 +7,7 @@
         theme="primary"
         @click="addPupilModal = true"
       >
-        <i class="bx bx-plus mr-2"></i><b> Add Subject</b>
+        <i class="bx bx-plus mr-2"></i><b> Add Pupil</b>
       </d-button>
     </d-row>
     <d-modal v-if="addPupilModal" @close="addPupilModal = false">
