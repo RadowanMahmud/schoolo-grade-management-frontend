@@ -17,14 +17,14 @@ export default function () {
         name: 'class',
       },
     },
-    {
-      title: 'Subject',
-      permission: 'createSubject',
-      htmlBefore: '<i class="bx bx-user"></i>',
-      to: {
-        name: 'subject',
-      },
-    },
+    // {
+    //   title: 'Subject',
+    //   permission: 'createSubject',
+    //   htmlBefore: '<i class="bx bx-user"></i>',
+    //   to: {
+    //     name: 'subject',
+    //   },
+    // },
 
     {
       title: 'Users',

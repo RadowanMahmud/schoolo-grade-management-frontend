@@ -40,12 +40,21 @@
                 {{ classList.name }}
               </td>
               <td style="align-content: center">
-                <d-button size="sm" theme="success" class="mr-2"
-                  ><i class="bx bx-edit"></i> <b></b
-                ></d-button>
+                <d-button
+                  size="sm"
+                  theme="success"
+                  class="mr-2"
+                  @click="
+                    $router.push({
+                      name: 'class-details-klass_id',
+                      params: { klass_id: classList.id },
+                    })
+                  "
+                  ><i class="bx bx-show"></i> <b> Details</b></d-button
+                >
                 <d-button size="sm" theme="outline-danger" class="mr-2"
-                  ><i class="bx bx-trash"></i> <b></b
-                ></d-button>
+                  ><i class="bx bx-trash"></i> <b>Delete</b></d-button
+                >
               </td>
             </tr>
           </tbody>
