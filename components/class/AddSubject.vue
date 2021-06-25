@@ -19,7 +19,7 @@
           <span class="my-auto mr-2"><b> Subject Name: </b></span>
           <d-form-input
             v-model="subjectCreateForm.name"
-            placeholder="Class name must be unique"
+            placeholder="Subject name must be unique"
             required
           />
         </div>
