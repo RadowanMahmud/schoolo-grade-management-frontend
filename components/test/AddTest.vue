@@ -56,7 +56,8 @@ const testCreateFormTemplate = {
 export default {
   name: 'AddTest',
   props: {
-    subject_id: {
+    subjectId: {
+      type: Text,
       required: true,
     },
   },
@@ -68,7 +69,7 @@ export default {
   },
   methods: {
     saveTest() {
-      this.testCreateForm.subject_id = this.subject_id
+      this.testCreateForm.subject_id = this.subjectId
 
       if (
         this.testCreateForm.name !== '' &&

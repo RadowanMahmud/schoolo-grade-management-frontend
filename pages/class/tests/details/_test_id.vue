@@ -12,6 +12,18 @@
         </h5>
       </div>
     </div>
+    <d-row align-h="end" class="mx-auto">
+      <AddTestPupil
+        :subject-id="test.subject_id"
+        :test-id="test_id"
+        :user-list="arrayOfEmptyPupils"
+      ></AddTestPupil>
+      <UpoladCSV
+        :subject-id="test.subject_id"
+        :test-id="test_id"
+        :user-list="arrayOfEmptyPupils"
+      ></UpoladCSV>
+    </d-row>
     <div class="card card-small mb-4 mt-2">
       <div class="card-body p-0 pb-3 text-center">
         <table class="table mb-0">
@@ -47,25 +59,54 @@
 </template>
 
 <script>
+import AddTestPupil from '~/components/test/AddTestPupil'
+import UpoladCSV from '~/components/test/UploadCSV'
 export default {
   name: 'TestId',
+  components: {
+    AddTestPupil,
+    UpoladCSV,
+  },
   data() {
     return {
       test_id: '',
       test: {},
+      classPupils: [],
+      arrayOfEmptyPupils: [],
     }
   },
   mounted() {
     this.test_id = this.$route.params.test_id
     this.fetchTestById()
+    this.$root.$on('testpupil-added', this.fetchTestById)
   },
   methods: {
     fetchTestById() {
       this.$axios.get(`tests/${this.test_id}`).then((res) => {
         if (res.status === 200) {
-          console.log(res.data)
           this.test = res.data
+          this.fetchClassPupilList(this.test.subject.klass_id)
         }
+      })
+    },
+    fetchClassPupilList(id) {
+      this.arrayOfEmptyPupils = []
+      this.$axios.get(`classes/${id}/classpupil`).then((res) => {
+        this.classPupils = res.data
+        for (let i = 0; i < this.classPupils.length; i++) {
+          let chk = false
+          for (let j = 0; j < this.test.testpupils.length; j++) {
+            if (
+              this.classPupils[i].user.id === this.test.testpupils[j].user.id
+            ) {
+              chk = true
+            }
+          }
+          if (!chk) {
+            this.arrayOfEmptyPupils.push(this.classPupils[i].user)
+          }
+        }
+        console.log(this.arrayOfEmptyPupils)
       })
     },
   },

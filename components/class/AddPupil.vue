@@ -108,10 +108,12 @@ export default {
       this.addPupilForm.pupils = [...new Set(pupilstemparr)]
       if (this.addPupilForm.pupils.length > 0) {
         this.$axios
-          .post('/classes//pupils/add', this.addPupilForm)
+          .post('/classes/pupils/add', this.addPupilForm)
           .then((res) => {
             if (res.status === 201) {
-              console.log(res)
+              this.addPupilModal = false
+              this.addPupilForm = { ...addPupilFormTemplate }
+              this.$root.$emit('pupil-added')
             }
           })
       } else {

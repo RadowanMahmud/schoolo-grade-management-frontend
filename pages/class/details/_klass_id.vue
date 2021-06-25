@@ -10,7 +10,7 @@
       </div>
     </div>
     <d-row>
-      <d-col cols="6">
+      <d-col cols="5">
         <h5 class="page-title">Subject List</h5>
         <AddSubject :klass="klass" :teachers="teachers"></AddSubject>
         <div class="card card-small mb-4 mt-2">
@@ -59,15 +59,25 @@
             <table class="table mb-0">
               <thead class="bg-light">
                 <tr>
-                  <th scope="col" class="border-0">id</th>
                   <th scope="col" class="border-0">User Name</th>
                   <th scope="col" class="border-0">Fore Name</th>
                   <th scope="col" class="border-0">Sur Name</th>
+                  <th scope="col" class="border-0">Average Grade</th>
                   <th scope="col" class="border-0">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="subject in klass.pupils" :key="subject.id"></tr>
+                <tr v-for="pupil in klass.pupils" :key="pupil.id">
+                  <td>{{ pupil.user.username }}</td>
+                  <td>{{ pupil.user.forename }}</td>
+                  <td>{{ pupil.user.surname }}</td>
+                  <td>{{ pupil.average_grade }}</td>
+                  <td style="align-content: center">
+                    <d-button size="sm" theme="danger" outline class="mr-2"
+                      ><i class="bx bx-trash"></i> <b> Delete</b></d-button
+                    >
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -100,6 +110,7 @@ export default {
     this.fetchClassById()
     this.fetchUsers()
     this.$root.$on('subject-added', this.fetchClassById)
+    this.$root.$on('pupil-added', this.fetchClassById)
   },
   methods: {
     fetchClassById() {

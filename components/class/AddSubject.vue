@@ -84,6 +84,7 @@ export default {
         this.$axios.post('subjects', this.subjectCreateForm).then((res) => {
           if (res.status === 201) {
             this.subjectCreationModal = false
+            this.subjectCreationModal = { ...subjectCreateFormTemplate }
             this.$root.$emit('subject-added')
           }
         })

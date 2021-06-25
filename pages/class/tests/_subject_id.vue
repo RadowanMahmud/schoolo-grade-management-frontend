@@ -9,7 +9,7 @@
         <h3 class="page-title">{{ subject_id }}</h3>
       </div>
     </div>
-    <AddTest :subject_id="subject_id"></AddTest>
+    <AddTest :subject-id="subject_id"></AddTest>
     <div class="card card-small mb-4 mt-2">
       <div class="card-body p-0 pb-3 text-center">
         <table class="table mb-0">
@@ -65,6 +65,7 @@ export default {
   },
   mounted() {
     this.subject_id = this.$route.params.subject_id
+    console.log(this.$route.params.subject_id)
     this.$root.$on('test-added', this.fetchTests)
     this.fetchTests()
   },
@@ -72,7 +73,6 @@ export default {
     fetchTests() {
       this.$axios.get(`tests/subject/${this.subject_id}`).then((res) => {
         this.tests = res.data
-        console.log(this.tests)
       })
     },
   },
