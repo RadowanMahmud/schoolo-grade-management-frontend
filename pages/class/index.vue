@@ -52,7 +52,16 @@
                   "
                   ><i class="bx bx-show"></i> <b> Details</b></d-button
                 >
-                <d-button size="sm" theme="info" class="mr-2"
+                <d-button
+                  size="sm"
+                  theme="info"
+                  class="mr-2"
+                  @click="
+                    () => {
+                      selectedClassForEdit = classList
+                      classEditModal = true
+                    }
+                  "
                   ><i class="bx bx-edit"></i> <b>Edit</b></d-button
                 >
                 <d-button size="sm" theme="outline-danger" class="mr-2"
@@ -104,10 +113,35 @@
         </d-form>
       </d-modal-body>
     </d-modal>
+    <d-modal v-if="classEditModal" @close="classEditModal = false">
+      <d-modal-header>
+        <d-modal-title>Edit Class</d-modal-title>
+      </d-modal-header>
+      <d-modal-body>
+        <div>
+          <div class="row pb-2 ml-2">
+            <span class="my-auto mr-2"><b> Class Name: </b></span>
+            <d-form-input
+              v-model="selectedClassForEdit.name"
+              placeholder="Class name must be unique"
+              required
+            />
+          </div>
+
+          <div class="row pb-2 ml-2">
+            <d-button @click="updateClass">Save</d-button>
+          </div>
+        </div>
+      </d-modal-body>
+    </d-modal>
   </div>
 </template>
 <script>
 const classCreateFormTemplate = {
+  name: '',
+}
+const classEditFormTemplate = {
+  id: '',
   name: '',
 }
 export default {
@@ -118,7 +152,10 @@ export default {
     totalRows: 0,
     classes: [],
     classAddModal: false,
+    classEditModal: false,
+    selectedClassForEdit: null,
     classCreateForm: { ...classCreateFormTemplate },
+    classEditForm: { ...classEditFormTemplate },
   }),
   computed: {
     getTotalPage: () =>
@@ -145,6 +182,22 @@ export default {
             this.classAddModal = false
             this.fetchClasses()
             this.classCreateForm = { ...classCreateFormTemplate }
+          }
+        })
+        .catch((err) => {
+          alert(err.toString())
+        })
+    },
+    updateClass() {
+      this.classEditForm.id = this.selectedClassForEdit.id
+      this.classEditForm.name = this.selectedClassForEdit.name
+      this.$axios
+        .put('classes', this.classEditForm)
+        .then((response) => {
+          if (response.status === 201) {
+            this.classEditModal = false
+            this.fetchClasses()
+            this.classEditForm = { ...classEditFormTemplate }
           }
         })
         .catch((err) => {
