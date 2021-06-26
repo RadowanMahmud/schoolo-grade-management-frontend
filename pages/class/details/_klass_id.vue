@@ -10,7 +10,7 @@
       </div>
     </div>
     <d-row>
-      <d-col cols="5">
+      <d-col cols="7">
         <h5 class="page-title">Subject List</h5>
         <AddSubject :klass="klass" :teachers="teachers"></AddSubject>
         <div class="card card-small mb-4 mt-2">
@@ -29,7 +29,7 @@
                     {{ sub.name }}
                   </td>
                   <td>
-                    {{ sub.teacher_id }}
+                    {{ getTeacherName(sub.teacher_id) }}
                   </td>
                   <td style="align-content: center">
                     <d-button
@@ -55,6 +55,24 @@
                         }
                       "
                       ><i class="bx bx-show"></i> <b>Grades</b></d-button
+                    >
+                    <d-button
+                      size="sm"
+                      theme="info"
+                      class="mr-2"
+                      @click="
+                        () => {
+                          selectedSubjectForEdit = sub
+                          subjectEditModal = true
+                        }
+                      "
+                      ><i class="bx bx-edit"></i> <b>Edit</b></d-button
+                    >
+                    <d-button size="sm" theme="warning" class="mr-2"
+                      ><i class="bx bx-folder"></i> <b>Archive</b></d-button
+                    >
+                    <d-button size="sm" theme="danger" class="mr-2"
+                      ><i class="bx bx-trash"></i> <b>Delete</b></d-button
                     >
                   </td>
                 </tr>
@@ -128,12 +146,55 @@
         </div>
       </d-modal-body>
     </d-modal>
+
+    <d-modal v-if="subjectEditModal" @close="subjectEditModal = false">
+      <d-modal-header>
+        <d-modal-title>Edit Subject</d-modal-title>
+      </d-modal-header>
+      <d-modal-body>
+        <div class="row pb-2 ml-2">
+          <span class="my-auto mr-2"><b> Subject Name: </b></span>
+          <d-form-input
+            v-model="selectedSubjectForEdit.name"
+            placeholder="Subject name must be unique"
+            required
+          />
+        </div>
+
+        <div class="row pb-2 ml-2">
+          <span class="my-auto mr-2"><b> Assign New Teacher: </b></span>
+          <template>
+            <v-select
+              v-model="selectedTeacherOnEdit"
+              placeholder="Select Teacher"
+              required
+              :options="teachers"
+              :get-option-label="(option) => option.username"
+            >
+              <template #option="{ username, forename, surname }">
+                {{ username }} | {{ forename }} ({{ surname }})
+              </template>
+            </v-select>
+          </template>
+        </div>
+
+        <div class="row pb-2 ml-2 mt-2">
+          <d-button @click="updateSubject">Submit</d-button>
+        </div>
+      </d-modal-body>
+    </d-modal>
   </div>
 </template>
 
 <script>
 import AddSubject from '~/components/class/AddSubject'
 import AddPupil from '~/components/class/AddPupil'
+const subjectEditFormTenmplate = {
+  id: '',
+  name: '',
+  klass_id: '',
+  teacher_id: '',
+}
 export default {
   name: 'KlassId',
   components: {
@@ -149,6 +210,10 @@ export default {
       pupils: [],
       selectedSubjectForSeeingPupilGrade: null,
       pupilGradeViewModal: false,
+      subjectEditModal: false,
+      selectedSubjectForEdit: null,
+      subjectEditForm: { ...subjectEditFormTenmplate },
+      selectedTeacherOnEdit: null,
     }
   },
   mounted() {
@@ -167,6 +232,8 @@ export default {
     fetchUsers() {
       this.$axios.get('users').then((response) => {
         this.users = response.data
+        this.teachers = []
+        this.pupils = []
         for (let i = 0; i < this.users.length; i++) {
           if (this.users[i].roles[0].name === 'teacher') {
             this.teachers.push(this.users[i])
@@ -174,6 +241,32 @@ export default {
             this.pupils.push(this.users[i])
           }
         }
+      })
+    },
+    getTeacherName(id) {
+      for (let i = 0; i < this.teachers.length; i++) {
+        if (id === this.teachers[i].id) {
+          return this.teachers[i].username
+        }
+      }
+
+      return 'null'
+    },
+    updateSubject() {
+      this.subjectEditForm.id = this.selectedSubjectForEdit.id
+      this.subjectEditForm.name = this.selectedSubjectForEdit.name
+      if (this.selectedTeacherOnEdit !== null) {
+        this.subjectEditForm.teacher_id = this.selectedTeacherOnEdit.id
+      } else {
+        this.subjectEditForm.teacher_id = this.selectedSubjectForEdit.teacher_id
+      }
+      this.subjectEditForm.klass_id = this.klass.id
+
+      this.$axios.put('subjects', this.subjectEditForm).then((res) => {
+        this.subjectEditForm = { ...subjectEditFormTenmplate }
+        this.subjectEditModal = false
+        this.fetchClassById()
+        this.fetchUsers()
       })
     },
   },

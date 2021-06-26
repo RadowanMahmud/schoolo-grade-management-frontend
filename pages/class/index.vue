@@ -202,6 +202,9 @@ export default {
         })
         .catch((err) => {
           alert(err.toString())
+          this.classEditModal = false
+          this.fetchClasses()
+          this.classEditForm = { ...classEditFormTemplate }
         })
     },
   },

@@ -37,6 +37,9 @@
                   "
                   ><i class="bx bx-show"></i> <b> Test Details</b></d-button
                 >
+                <d-button size="sm" theme="info" class="mr-2"
+                  ><i class="bx bx-edit"></i> <b> Edit </b></d-button
+                >
                 <d-button size="sm" theme="danger" outline class="mr-2"
                   ><i class="bx bx-trash"></i> <b> Delete </b></d-button
                 >
