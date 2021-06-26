@@ -52,6 +52,9 @@
                   "
                   ><i class="bx bx-show"></i> <b> Details</b></d-button
                 >
+                <d-button size="sm" theme="info" class="mr-2"
+                  ><i class="bx bx-edit"></i> <b>Edit</b></d-button
+                >
                 <d-button size="sm" theme="outline-danger" class="mr-2"
                   ><i class="bx bx-trash"></i> <b>Delete</b></d-button
                 >
