@@ -55,7 +55,16 @@
               </td>
               <td width="15%" align="right">
                 <d-row style="margin-right: 2px; margin-left: 25%">
-                  <d-button size="sm" theme="info" class="mr-2"
+                  <d-button
+                    size="sm"
+                    theme="info"
+                    class="mr-2"
+                    @click="
+                      () => {
+                        selectedUserForEdit = user
+                        userEditModal = true
+                      }
+                    "
                     ><i class="bx bx-edit"></i> <b></b
                   ></d-button>
                   <d-button size="sm" theme="outline-danger" class="mr-2"
@@ -158,6 +167,54 @@
         </d-form>
       </d-modal-body>
     </d-modal>
+
+    <d-modal v-if="userEditModal" @close="userEditModal = false">
+      <d-modal-header>
+        <d-modal-title>Edit User</d-modal-title>
+      </d-modal-header>
+      <d-modal-body v-if="selectedUserForEdit">
+        <div>
+          <div class="row pb-2 ml-2">
+            <span class="my-auto mr-2"><b> User Name: </b></span>
+            <d-form-input
+              v-model="selectedUserForEdit.username"
+              placeholder="User name must be unique"
+              required
+            />
+          </div>
+
+          <div class="row pb-2 ml-2">
+            <span class="my-auto mr-2"><b> Fore Name: </b></span>
+            <d-form-input
+              v-model="selectedUserForEdit.forename"
+              placeholder="Enter fore name of user"
+              required
+            />
+          </div>
+
+          <div class="row pb-2 ml-2">
+            <span class="my-auto mr-2"><b> Sur Name: </b></span>
+            <d-form-input
+              v-model="selectedUserForEdit.surname"
+              placeholder="Enter Sur name of user"
+              required
+            />
+          </div>
+
+          <div class="row pb-2 ml-2">
+            <span class="my-auto mr-2"><b> Select User Role: </b></span>
+            <d-input
+              v-model="selectedUserForEdit.roles[0].name"
+              disabled
+            ></d-input>
+          </div>
+
+          <div class="row pb-2 ml-2">
+            <d-button @click="updateUser">Save</d-button>
+          </div>
+        </div>
+      </d-modal-body>
+    </d-modal>
   </div>
 </template>
 
@@ -169,6 +226,13 @@ const userCreateFormTemplate = {
   password: '',
   role: null,
 }
+const userEditFormTemplate = {
+  username: '',
+  forename: '',
+  surname: '',
+  user_id: '',
+  id: '',
+}
 export default {
   name: 'Users',
   data: () => ({
@@ -177,7 +241,10 @@ export default {
     totalRows: 0,
     users: [],
     userAddModal: false,
+    userEditModal: false,
+    selectedUserForEdit: null,
     userCreateForm: { ...userCreateFormTemplate },
+    userEditForm: { ...userEditFormTemplate },
     role_options: [
       { value: 'admin', text: 'Admin' },
       { value: 'teacher', text: 'Teacher' },
@@ -207,6 +274,22 @@ export default {
           this.userAddModal = false
           this.fetchUsers()
           this.userCreateForm = { ...userCreateFormTemplate }
+        }
+      })
+    },
+    updateUser() {
+      this.userEditForm.id = this.selectedUserForEdit.id
+      this.userEditForm.user_id = this.selectedUserForEdit.user_id
+      this.userEditForm.username = this.selectedUserForEdit.username
+      this.userEditForm.forename = this.selectedUserForEdit.forename
+      this.userEditForm.surname = this.selectedUserForEdit.surname
+
+      this.$axios.put('users', this.userEditForm).then((res) => {
+        if (res.status === 201) {
+          this.userEditModal = false
+          this.userEditForm = { ...userEditFormTemplate }
+          this.selectedUserForEdit = null
+          this.fetchUsers()
         }
       })
     },
