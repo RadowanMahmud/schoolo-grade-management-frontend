@@ -63,7 +63,7 @@ export default {
     ...mapMutations(['storeUser']),
     login() {
       this.$axios.post('users/login', this.loginForm).then((response) => {
-        if (response.status === 200) {
+        if (response.status === 201) {
           this.storeUser(response.data)
           this.$router.push('/')
         }

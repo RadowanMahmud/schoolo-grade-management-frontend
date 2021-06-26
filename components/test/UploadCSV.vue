@@ -20,6 +20,9 @@
           <span class="my-auto mr-2"><b> Upload Csv File: </b></span>
           <input type="file" @change="onFileChange" />
         </div>
+        <small
+          >Columns Must Contain Two Fields named as username and grade
+        </small>
         <div class="card card-small mb-4 mt-2">
           <div class="card-body p-0 pb-3 text-center">
             <table class="table mb-0">
@@ -31,7 +34,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="per in persons" :key="per.data1">
+                <tr v-for="per in pupils" :key="per.data1">
                   <td v-for="characteristics in per" :key="characteristics">
                     {{ characteristics }}
                   </td>
@@ -41,6 +44,11 @@
           </div>
         </div>
       </d-modal-body>
+      <d-modal-footer>
+        <d-button :disabled="!csvButtonActivation" @click="saveTestArray"
+          >Save</d-button
+        >
+      </d-modal-footer>
     </d-modal>
   </div>
 </template>
@@ -72,35 +80,51 @@ export default {
     return {
       uploadCsvModal: false,
       testPupilAddForm: { ...testPupilAddFormTemplate },
-      selectedUser: null,
       fileinput: '',
       rows: [],
       dataseperator: [],
       headers: [],
-      persons: [],
+      pupils: [],
       personcount: 0,
       loaded: false,
       numberOfColumn: 0,
+      csvButtonActivation: false,
     }
   },
   methods: {
-    saveTest() {
+    replaceUserIdWithId() {
+      for (let i = 0; i < this.pupils.length; i++) {
+        for (let j = 0; j < this.userList.length; j++) {
+          if (this.pupils[i].username === this.userList[j].user.username) {
+            this.pupils[i].username = this.userList[j].user.id
+            break
+          }
+        }
+      }
+    },
+    saveTestArray() {
+      this.replaceUserIdWithId()
+      console.log(this.userList)
+      for (let i = 0; i < this.pupils.length; i++) {
+        this.savingTest(this.pupils[i])
+      }
+      this.uploadCsvModal = false
+      this.$root.$emit('testpupil-added')
+    },
+    savingTest(selectedUser) {
+      this.testPupilAddForm = { ...testPupilAddFormTemplate }
       this.testPupilAddForm.subject_id = this.subjectId.toString()
-      this.testPupilAddForm.test_id = this.testId.toString()
-      console.log(this.selectedUser)
-      this.testPupilAddForm.user_id = this.selectedUser.id.toString()
+      this.testPupilAddForm.test_id = this.testId
+      this.testPupilAddForm.user_id = selectedUser.username.toString() // we are replacing the name with user id, but due to object structure we are calling it user name
+      this.testPupilAddForm.grade = parseFloat(selectedUser.grade)
       console.log(this.testPupilAddForm)
       if (
         this.testPupilAddForm.user_id !== '' &&
         this.testPupilAddForm.grade !== ''
       ) {
-        this.arr.push(this.testPupilAddForm)
         this.$axios.post('testpupils', this.testPupilAddForm).then((res) => {
           if (res.status === 201) {
             this.testPupilAddForm = { ...testPupilAddFormTemplate }
-            this.uploadCsvModal = false
-            this.arr = []
-            this.$root.$emit('testpupil-added')
           }
         })
       }
@@ -117,6 +141,7 @@ export default {
       reader.onload = () => {
         vm.fileinput = reader.result
         this.parseFileDataCheck()
+        this.csvButtonActivation = true
       }
       reader.readAsText(file)
     },
@@ -146,7 +171,6 @@ export default {
       this.loaded = true
     },
     createObject(data) {
-      console.log(data)
       this.dataseperator = null
       this.dataseperator = data.split(',')
       // console.log(this.dataseperator);
@@ -154,9 +178,8 @@ export default {
       for (let i = 0; i < this.numberOfColumn; i++) {
         tempPerson[`${this.headers[i]}`] = this.dataseperator[i]
       }
-
       console.log(tempPerson)
-      this.persons.push(tempPerson)
+      this.pupils.push(tempPerson)
       // console.log("printing "+this.persons[this.personcount].data1+" "+this.persons[this.personcount].data2);
       this.personcount++
     },

@@ -79,14 +79,12 @@ export default {
   },
   methods: {
     saveSubject() {
+      this.subjectCreationModal = false
       if (this.selectedTeacher !== null && this.subjectCreateForm.name !== '') {
         this.subjectCreateForm.teacher_id = this.selectedTeacher.id
         this.$axios.post('subjects', this.subjectCreateForm).then((res) => {
-          if (res.status === 201) {
-            this.subjectCreationModal = false
-            this.subjectCreationModal = { ...subjectCreateFormTemplate }
-            this.$root.$emit('subject-added')
-          }
+          this.subjectCreationModal = { ...subjectCreateFormTemplate }
+          this.$root.$emit('subject-added')
         })
       } else {
         alert('Information Missing')

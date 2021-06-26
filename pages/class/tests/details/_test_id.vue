@@ -21,7 +21,7 @@
       <UpoladCSV
         :subject-id="test.subject_id"
         :test-id="test_id"
-        :user-list="arrayOfEmptyPupils"
+        :user-list="classPupils"
       ></UpoladCSV>
     </d-row>
     <div class="card card-small mb-4 mt-2">
@@ -43,8 +43,8 @@
               <td>{{ testpupil.user.surname }}</td>
               <td>{{ testpupil.grade }}</td>
               <td style="align-content: center">
-                <d-button size="sm" theme="success" class="mr-2"
-                  ><i class="bx bx-trash"></i> <b> Delete</b></d-button
+                <d-button size="sm" theme="info" class="mr-2"
+                  ><i class="bx bx-edit"></i> <b> Edit</b></d-button
                 >
                 <d-button size="sm" theme="danger" outline class="mr-2"
                   ><i class="bx bx-trash"></i> <b> Delete </b></d-button
@@ -106,7 +106,6 @@ export default {
             this.arrayOfEmptyPupils.push(this.classPupils[i].user)
           }
         }
-        console.log(this.arrayOfEmptyPupils)
       })
     },
   },
