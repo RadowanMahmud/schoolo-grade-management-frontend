@@ -270,11 +270,11 @@ export default {
     },
     addUser() {
       this.$axios.post('users', this.userCreateForm).then((res) => {
-        if (res.status === 201) {
-          this.userAddModal = false
-          this.fetchUsers()
-          this.userCreateForm = { ...userCreateFormTemplate }
-        }
+        //  if (res.status === 201) {
+        this.userAddModal = false
+        this.fetchUsers()
+        this.userCreateForm = { ...userCreateFormTemplate }
+        //  }
       })
     },
     updateUser() {
@@ -285,12 +285,12 @@ export default {
       this.userEditForm.surname = this.selectedUserForEdit.surname
 
       this.$axios.put('users', this.userEditForm).then((res) => {
-        if (res.status === 201) {
-          this.userEditModal = false
-          this.userEditForm = { ...userEditFormTemplate }
-          this.selectedUserForEdit = null
-          this.fetchUsers()
-        }
+        // if (res.status === 201) {
+        this.userEditModal = false
+        this.userEditForm = { ...userEditFormTemplate }
+        this.selectedUserForEdit = null
+        this.fetchUsers()
+        // }
       })
     },
     getTheme(role) {

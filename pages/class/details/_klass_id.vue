@@ -132,8 +132,10 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import AddSubject from '~/components/class/AddSubject'
 import AddPupil from '~/components/class/AddPupil'
+
 export default {
   name: 'KlassId',
   components: {
@@ -151,6 +153,9 @@ export default {
       pupilGradeViewModal: false,
     }
   },
+  computed: {
+    ...mapGetters(['getUser']),
+  },
   mounted() {
     this.klass_id = this.$route.params.klass_id
     this.fetchClassById()
@@ -162,6 +167,10 @@ export default {
     fetchClassById() {
       this.$axios.get(`classes/${this.klass_id}`).then((res) => {
         this.klass = res.data
+        console.log(
+          `id=${this.getUser.id}, role=${this.getUser.roles[0].name}, user_id=${this.getUser.user_id}`
+        )
+        console.log(res.data)
       })
     },
     fetchUsers() {
@@ -176,6 +185,7 @@ export default {
         }
       })
     },
+    checkUserHasPermission() {},
   },
 }
 </script>

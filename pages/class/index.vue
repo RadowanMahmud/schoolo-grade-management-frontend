@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="$hasPermission('createClass')"
+    v-if="this.$hasPermission('createClass')"
     class="main-content-container container-fluid px-4"
   >
     <!-- Page Header -->
@@ -15,7 +15,7 @@
 
     <d-row align-h="end" class="mx-auto">
       <d-button
-        v-if="this.$hasPermission('createClass')"
+        v-if="this.$hasPermission('createClass' && 'justAdmin')"
         outline
         size="sm"
         theme="success"
@@ -52,10 +52,20 @@
                   "
                   ><i class="bx bx-show"></i> <b> Details</b></d-button
                 >
-                <d-button size="sm" theme="info" class="mr-2"
+
+                <d-button
+                  v-if="$hasPermission('createClass' && 'justAdmin')"
+                  size="sm"
+                  theme="info"
+                  class="mr-2"
                   ><i class="bx bx-edit"></i> <b>Edit</b></d-button
                 >
-                <d-button size="sm" theme="outline-danger" class="mr-2"
+
+                <d-button
+                  v-if="$hasPermission('createClass' && 'justAdmin')"
+                  size="sm"
+                  theme="outline-danger"
+                  class="mr-2"
                   ><i class="bx bx-trash"></i> <b>Delete</b></d-button
                 >
               </td>
@@ -107,12 +117,14 @@
   </div>
 </template>
 <script>
+import { mapGetters } from 'vuex'
 const classCreateFormTemplate = {
   name: '',
 }
 export default {
   name: 'Class',
   data: () => ({
+    test: false,
     currentPage: 0,
     perPage: 1,
     totalRows: 0,
@@ -121,22 +133,41 @@ export default {
     classCreateForm: { ...classCreateFormTemplate },
   }),
   computed: {
+    ...mapGetters(['getUser']),
     getTotalPage: () =>
       Math.ceil(parseFloat('' + this.totalRows) / this.perPage),
   },
+
   mounted() {
     this.fetchClasses()
   },
   methods: {
     fetchClasses() {
-      this.$axios
-        .get(`classes?page=${this.currentPage + 1}`)
-        .then((response) => {
-          this.classes = response.data.data
-          this.perPage = response.data.per_page
-          this.totalRows = response.data.total
-        })
+      if (
+        this.getUser.roles[0].name === 'admin' ||
+        this.getUser.roles[0].name === 'super_admin'
+      ) {
+        this.$axios
+          .get(`classes?page=${this.currentPage + 1}`)
+          .then((response) => {
+            this.classes = response.data.data
+            this.perPage = response.data.per_page
+            this.totalRows = response.data.total
+          })
+      } else {
+        console.log(this.getUser.id)
+        console.log(this.getUser.user_id)
+        this.$axios
+          .get(`classes/users/${this.getUser.id}?page=${this.currentPage + 1}`)
+          .then((response) => {
+            console.log('teacher = ', response.data)
+            this.classes = response.data.data
+            this.perPage = response.data.per_page
+            this.totalRows = response.data.total
+          })
+      }
     },
+
     addClass() {
       this.$axios
         .post('classes', this.classCreateForm)

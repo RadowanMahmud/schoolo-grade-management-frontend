@@ -11,6 +11,7 @@ export default function () {
     {
       title: 'Class',
       permission: 'createClass',
+
       htmlBefore:
         '<i class="bx bxs-book-content" style="font-size: 1.2rem"></i>',
       to: {
