@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="$hasPermission('modifyTests')"
-    class="main-content-container container-fluid px-4"
-  >
+  <div class="main-content-container container-fluid px-4">
     <div class="page-header row no-gutters py-4">
       <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
         <span class="text-uppercase page-subtitle">Pupil List For</span>
@@ -13,16 +10,20 @@
       </div>
     </div>
     <d-row align-h="end" class="mx-auto">
-      <AddTestPupil
-        :subject-id="test.subject_id"
-        :test-id="test_id"
-        :user-list="arrayOfEmptyPupils"
-      ></AddTestPupil>
-      <UpoladCSV
-        :subject-id="test.subject_id"
-        :test-id="test_id"
-        :user-list="classPupils"
-      ></UpoladCSV>
+      <div v-if="$hasPermission('modifyTests')">
+        <AddTestPupil
+          :subject-id="test.subject_id"
+          :test-id="test_id"
+          :user-list="arrayOfEmptyPupils"
+        ></AddTestPupil>
+      </div>
+      <div v-if="$hasPermission('modifyTests')">
+        <UpoladCSV
+          :subject-id="test.subject_id"
+          :test-id="test_id"
+          :user-list="classPupils"
+        ></UpoladCSV>
+      </div>
     </d-row>
     <div class="card card-small mb-4 mt-2">
       <div class="card-body p-0 pb-3 text-center">
@@ -33,7 +34,13 @@
               <th scope="col" class="border-0">Fore Name</th>
               <th scope="col" class="border-0">Sur Name</th>
               <th scope="col" class="border-0">Grade</th>
-              <th scope="col" class="border-0">Actions</th>
+              <th
+                v-if="$hasPermission('modifyTests')"
+                scope="col"
+                class="border-0"
+              >
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -42,7 +49,10 @@
               <td>{{ testpupil.user.forename }}</td>
               <td>{{ testpupil.user.surname }}</td>
               <td>{{ testpupil.grade }}</td>
-              <td style="align-content: center">
+              <td
+                v-if="$hasPermission('modifyTests')"
+                style="align-content: center"
+              >
                 <d-button size="sm" theme="info" class="mr-2"
                   ><i class="bx bx-edit"></i> <b> Edit</b></d-button
                 >

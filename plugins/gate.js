@@ -4,7 +4,6 @@ const teacherPermissions = [
   'addPupil',
   'createSubject',
   'modifyTests',
-  'createClass',
   'justTeacher',
 ]
 const adminPermissions = [

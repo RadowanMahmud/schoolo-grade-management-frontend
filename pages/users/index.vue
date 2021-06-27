@@ -266,6 +266,11 @@ export default {
           this.users = response.data.data
           this.perPage = response.data.per_page
           this.totalRows = response.data.total
+          // this.users.forEach((data) => {
+          //   console.log(
+          //     `username = ${data.username}, role=${data.roles[0].name}, id=${data.id}`
+          //   )
+          // })
         })
     },
     addUser() {

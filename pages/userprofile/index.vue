@@ -58,13 +58,11 @@
 <script>
 import { mapGetters } from 'vuex'
 const userFormTemplate = {
-  created_at: '',
-  forename: '',
-  id: '',
-  surname: '',
-  updated_at: '',
-  user_id: '',
   username: '',
+  forename: '',
+  surname: '',
+  user_id: '',
+  id: '',
 }
 export default {
   name: 'Index',
@@ -78,18 +76,22 @@ export default {
   },
   mounted() {
     this.fetchUserByid()
-    console.log('User = ', this.getUser)
   },
   methods: {
     fetchUserByid() {
       this.$axios.get(`users/${this.getUser.id}`).then((response) => {
-        this.userEditForm = { ...response.data }
+        console.log('User = ', response.data)
+        this.userEditForm.username = response.data.username
+        this.userEditForm.forename = response.data.forename
+        this.userEditForm.surname = response.data.surname
+        this.userEditForm.user_id = response.data.user_id
+        this.userEditForm.id = response.data.id
       })
     },
     updateUser() {
-      this.userEditForm.updated_at = new Date()
       this.$axios.put('users', this.userEditForm).then((res) => {
-        this.fetchUserByid()
+        this.userEditForm = { ...userFormTemplate }
+        this.fetchUsers()
       })
     },
   },

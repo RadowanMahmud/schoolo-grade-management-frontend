@@ -12,7 +12,9 @@
     <d-row>
       <d-col cols="5">
         <h5 class="page-title">Subject List</h5>
-        <AddSubject :klass="klass" :teachers="teachers"></AddSubject>
+        <div v-if="$hasPermission('justAdmin')">
+          <AddSubject :klass="klass" :teachers="teachers"></AddSubject>
+        </div>
         <div class="card card-small mb-4 mt-2">
           <div class="card-body p-0 pb-3 text-center">
             <table class="table mb-0">
@@ -65,7 +67,10 @@
       </d-col>
       <d-col>
         <h5 class="page-title">Pupil List</h5>
-        <AddPupil :klass="klass" :pupils="pupils"></AddPupil>
+        <div v-if="$hasPermission('justAdmin')">
+          <AddPupil :klass="klass" :pupils="pupils"></AddPupil>
+        </div>
+
         <div class="card card-small mb-4 mt-2">
           <div class="card-body p-0 pb-3 text-center">
             <table class="table mb-0">
@@ -74,7 +79,13 @@
                   <th scope="col" class="border-0">User Name</th>
                   <th scope="col" class="border-0">Fore Name</th>
                   <th scope="col" class="border-0">Sur Name</th>
-                  <th scope="col" class="border-0">Actions</th>
+                  <th
+                    v-if="$hasPermission('justAdmin')"
+                    scope="col"
+                    class="border-0"
+                  >
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -82,7 +93,10 @@
                   <td>{{ pupil.user.username }}</td>
                   <td>{{ pupil.user.forename }}</td>
                   <td>{{ pupil.user.surname }}</td>
-                  <td style="align-content: center">
+                  <td
+                    v-if="$hasPermission('justAdmin')"
+                    style="align-content: center"
+                  >
                     <d-button size="sm" theme="danger" outline class="mr-2"
                       ><i class="bx bx-trash"></i> <b> Delete</b></d-button
                     >
@@ -167,10 +181,13 @@ export default {
     fetchClassById() {
       this.$axios.get(`classes/${this.klass_id}`).then((res) => {
         this.klass = res.data
-        console.log(
-          `id=${this.getUser.id}, role=${this.getUser.roles[0].name}, user_id=${this.getUser.user_id}`
-        )
-        console.log(res.data)
+        if (this.getUser.roles[0].name === 'teacher') {
+          this.forTeacherOnly()
+        }
+        // console.log(
+        //   `id=${this.getUser.id}, role=${this.getUser.roles[0].name}, user_id=${this.getUser.user_id}`
+        // )
+        // console.log(res.data.subjects[0].teacher_id)
       })
     },
     fetchUsers() {
@@ -185,7 +202,11 @@ export default {
         }
       })
     },
-    checkUserHasPermission() {},
+    forTeacherOnly() {
+      this.klass.subjects = this.klass.subjects.filter((sub) => {
+        return sub.teacher_id === this.getUser.id
+      })
+    },
   },
 }
 </script>

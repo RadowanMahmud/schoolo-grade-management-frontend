@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="this.$hasPermission('createClass')"
-    class="main-content-container container-fluid px-4"
-  >
+  <div class="main-content-container container-fluid px-4">
     <!-- Page Header -->
     <div class="page-header row no-gutters py-4">
       <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
@@ -15,7 +12,7 @@
 
     <d-row align-h="end" class="mx-auto">
       <d-button
-        v-if="this.$hasPermission('createClass' && 'justAdmin')"
+        v-if="this.$hasPermission('justAdmin')"
         outline
         size="sm"
         theme="success"
@@ -54,7 +51,7 @@
                 >
 
                 <d-button
-                  v-if="$hasPermission('createClass' && 'justAdmin')"
+                  v-if="$hasPermission('justAdmin')"
                   size="sm"
                   theme="info"
                   class="mr-2"
@@ -62,7 +59,7 @@
                 >
 
                 <d-button
-                  v-if="$hasPermission('createClass' && 'justAdmin')"
+                  v-if="$hasPermission('justAdmin')"
                   size="sm"
                   theme="outline-danger"
                   class="mr-2"
@@ -156,15 +153,12 @@ export default {
           })
       } else {
         console.log(this.getUser.id)
-        console.log(this.getUser.user_id)
-        this.$axios
-          .get(`classes/users/${this.getUser.id}?page=${this.currentPage + 1}`)
-          .then((response) => {
-            console.log('teacher = ', response.data)
-            this.classes = response.data.data
-            this.perPage = response.data.per_page
-            this.totalRows = response.data.total
-          })
+        this.$axios.get(`classes/users/${this.getUser.id}`).then((response) => {
+          console.log('teacher = ', response.data)
+          this.classes = response.data
+          this.perPage = response.data.per_page
+          this.totalRows = response.data.total
+        })
       }
     },
 

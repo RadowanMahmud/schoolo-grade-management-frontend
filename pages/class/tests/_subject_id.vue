@@ -1,15 +1,16 @@
 <template>
-  <div
-    v-if="$hasPermission('modifyTests')"
-    class="main-content-container container-fluid px-4"
-  >
+  <div class="main-content-container container-fluid px-4">
     <div class="page-header row no-gutters py-4">
       <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
         <span class="text-uppercase page-subtitle">Test List For</span>
         <h3 class="page-title">{{ subject_id }}</h3>
       </div>
     </div>
-    <AddTest :subject-id="subject_id"></AddTest>
+    <div>
+      <div v-if="$hasPermission('modifyTests')">
+        <AddTest :subject-id="subject_id"></AddTest>
+      </div>
+    </div>
     <div class="card card-small mb-4 mt-2">
       <div class="card-body p-0 pb-3 text-center">
         <table class="table mb-0">
@@ -37,7 +38,13 @@
                   "
                   ><i class="bx bx-show"></i> <b> Test Details</b></d-button
                 >
-                <d-button size="sm" theme="danger" outline class="mr-2"
+
+                <d-button
+                  v-if="$hasPermission('modifyTests')"
+                  size="sm"
+                  theme="danger"
+                  outline
+                  class="mr-2"
                   ><i class="bx bx-trash"></i> <b> Delete </b></d-button
                 >
               </td>
