@@ -37,7 +37,16 @@
                   "
                   ><i class="bx bx-show"></i> <b> Test Details</b></d-button
                 >
-                <d-button size="sm" theme="info" class="mr-2"
+                <d-button
+                  size="sm"
+                  theme="info"
+                  class="mr-2"
+                  @click="
+                    () => {
+                      selectedTestForEdit = test
+                      testEditModal = true
+                    }
+                  "
                   ><i class="bx bx-edit"></i> <b> Edit </b></d-button
                 >
                 <d-button size="sm" theme="danger" outline class="mr-2"
@@ -49,11 +58,50 @@
         </table>
       </div>
     </div>
+    <d-modal
+      v-if="testEditModal"
+      :no-backdrop="true"
+      @close="testEditModal = false"
+    >
+      <d-modal-header>
+        <d-modal-title>Add Test</d-modal-title>
+      </d-modal-header>
+      <d-modal-body>
+        <div class="row pb-2 ml-2">
+          <span class="my-auto mr-2"><b> Test Name: </b></span>
+          <d-form-input
+            v-model="selectedTestForEdit.name"
+            placeholder="Test name must be unique"
+            required
+          />
+        </div>
+
+        <div class="row pb-2 ml-2">
+          <span class="my-auto mr-2"><b> Date: </b></span>
+          <date-picker
+            v-model="selectedTestForEdit.test_date"
+            format="DD-MM-YYYY"
+            :input-attr="{ required: true }"
+            placeholder="Enter Date"
+          />
+        </div>
+
+        <div class="row pb-2 ml-2 mt-2">
+          <d-button @click="updateTest">Submit</d-button>
+        </div>
+      </d-modal-body>
+    </d-modal>
   </div>
 </template>
 
 <script>
 import AddTest from '~/components/test/AddTest'
+const testEditFormTemplate = {
+  id: '',
+  name: '',
+  subject_id: '',
+  test_date: null,
+}
 export default {
   name: 'SubjectId',
   components: {
@@ -64,11 +112,13 @@ export default {
       subject: null,
       subject_id: '',
       tests: [],
+      testEditModal: false,
+      selectedTestForEdit: null,
+      testEditForm: { ...testEditFormTemplate },
     }
   },
   mounted() {
     this.subject_id = this.$route.params.subject_id
-    console.log(this.$route.params.subject_id)
     this.$root.$on('test-added', this.fetchTests)
     this.fetchTests()
   },
@@ -76,6 +126,20 @@ export default {
     fetchTests() {
       this.$axios.get(`tests/subject/${this.subject_id}`).then((res) => {
         this.tests = res.data
+      })
+    },
+    updateTest() {
+      this.testEditForm.id = this.selectedTestForEdit.id
+      this.testEditForm.name = this.selectedTestForEdit.name
+      this.testEditForm.subject_id = this.subject_id
+      this.testEditForm.test_date = this.selectedTestForEdit.test_date
+
+      this.$axios.put('tests', this.testEditForm).then((res) => {
+        if (res.status === 201) {
+          this.testEditForm = { ...testEditFormTemplate }
+          this.testEditModal = false
+          this.fetchTests()
+        }
       })
     },
   },

@@ -43,7 +43,16 @@
               <td>{{ testpupil.user.surname }}</td>
               <td>{{ testpupil.grade }}</td>
               <td style="align-content: center">
-                <d-button size="sm" theme="info" class="mr-2"
+                <d-button
+                  size="sm"
+                  theme="info"
+                  class="mr-2"
+                  @click="
+                    () => {
+                      selectedPupilForGradeEdit = testpupil
+                      editGradeModal = true
+                    }
+                  "
                   ><i class="bx bx-edit"></i> <b> Edit</b></d-button
                 >
                 <d-button size="sm" theme="danger" outline class="mr-2"
@@ -55,12 +64,40 @@
         </table>
       </div>
     </div>
+    <d-modal v-if="editGradeModal" @close="editGradeModal = false">
+      <d-modal-header>
+        <d-modal-title>Edit Pupil Grade</d-modal-title>
+      </d-modal-header>
+      <d-modal-body>
+        <div class="row pb-2 ml-2">
+          <span class="my-auto mr-2"><b> Enter New Grade: </b></span>
+          <d-form-input
+            v-model.number="selectedPupilForGradeEdit.grade"
+            type
+            number
+            placeholder="Input Grade"
+            required
+          />
+        </div>
+
+        <div class="row pb-2 ml-2 mt-2">
+          <d-button @click="updateGrade">Submit</d-button>
+        </div>
+      </d-modal-body>
+    </d-modal>
   </div>
 </template>
 
 <script>
 import AddTestPupil from '~/components/test/AddTestPupil'
 import UpoladCSV from '~/components/test/UploadCSV'
+const gradeEditFormTemplate = {
+  id: '',
+  user_id: '',
+  subject_id: '',
+  test_id: '',
+  grade: null,
+}
 export default {
   name: 'TestId',
   components: {
@@ -73,6 +110,9 @@ export default {
       test: {},
       classPupils: [],
       arrayOfEmptyPupils: [],
+      gradeEditForm: { ...gradeEditFormTemplate },
+      editGradeModal: false,
+      selectedPupilForGradeEdit: null,
     }
   },
   mounted() {
@@ -105,6 +145,21 @@ export default {
           if (!chk) {
             this.arrayOfEmptyPupils.push(this.classPupils[i].user)
           }
+        }
+      })
+    },
+    updateGrade() {
+      this.gradeEditForm.id = this.selectedPupilForGradeEdit.id
+      this.gradeEditForm.test_id = this.selectedPupilForGradeEdit.test_id
+      this.gradeEditForm.subject_id = this.selectedPupilForGradeEdit.subject_id
+      this.gradeEditForm.user_id = this.selectedPupilForGradeEdit.user_id
+      this.gradeEditForm.grade = this.selectedPupilForGradeEdit.grade
+
+      this.$axios.put('testpupils', this.gradeEditForm).then((res) => {
+        if (res.status === 201) {
+          this.gradeEditForm = { ...gradeEditFormTemplate }
+          this.editGradeModal = false
+          this.fetchTestById()
         }
       })
     },
