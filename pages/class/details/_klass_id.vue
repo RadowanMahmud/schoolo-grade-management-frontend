@@ -27,6 +27,9 @@
                 <tr v-for="sub in klass.subjects" :key="sub.id">
                   <td>
                     {{ sub.name }}
+                    <d-badge v-if="sub.type === 1" theme="warning"
+                      >Archived</d-badge
+                    >
                   </td>
                   <td>
                     {{ getTeacherName(sub.teacher_id) }}
@@ -57,6 +60,7 @@
                       ><i class="bx bx-show"></i> <b>Grades</b></d-button
                     >
                     <d-button
+                      v-if="sub.type === 0"
                       size="sm"
                       theme="info"
                       class="mr-2"
@@ -68,10 +72,24 @@
                       "
                       ><i class="bx bx-edit"></i> <b>Edit</b></d-button
                     >
-                    <d-button size="sm" theme="warning" class="mr-2"
+                    <d-button
+                      v-if="sub.type === 0"
+                      size="sm"
+                      theme="warning"
+                      class="mr-2"
+                      @click="
+                        () => {
+                          selectedArchivedSubject = sub
+                          archiveAsurityModal = true
+                        }
+                      "
                       ><i class="bx bx-folder"></i> <b>Archive</b></d-button
                     >
-                    <d-button size="sm" theme="danger" class="mr-2"
+                    <d-button
+                      v-if="sub.type === 0"
+                      size="sm"
+                      theme="danger"
+                      class="mr-2"
                       ><i class="bx bx-trash"></i> <b>Delete</b></d-button
                     >
                   </td>
@@ -183,6 +201,29 @@
         </div>
       </d-modal-body>
     </d-modal>
+
+    <d-modal v-if="archiveAsurityModal" @close="archiveAsurityModal = false">
+      <d-modal-header>
+        <d-modal-title>Archive Asurity</d-modal-title>
+      </d-modal-header>
+      <d-modal-body>
+        <div class="row pb-2 ml-2">
+          <b>
+            Are You sure You want to archive
+            {{ selectedArchivedSubject.name }}
+            ? Once it's archived, it can not be undone
+          </b>
+        </div>
+      </d-modal-body>
+      <d-modal-footer>
+        <d-button theme="success" outline @click="archiveSubject"
+          ><b>Yes</b></d-button
+        >
+        <d-button theme="danger" outline @click="archiveAsurityModal = false"
+          >No</d-button
+        >
+      </d-modal-footer>
+    </d-modal>
   </div>
 </template>
 
@@ -214,6 +255,8 @@ export default {
       selectedSubjectForEdit: null,
       subjectEditForm: { ...subjectEditFormTenmplate },
       selectedTeacherOnEdit: null,
+      archiveAsurityModal: false,
+      selectedArchivedSubject: null,
     }
   },
   mounted() {
@@ -268,6 +311,15 @@ export default {
         this.fetchClassById()
         this.fetchUsers()
       })
+    },
+    archiveSubject() {
+      this.$axios
+        .put(`archive/subjects/${this.selectedArchivedSubject.id}`)
+        .then(() => {
+          this.archiveAsurityModal = false
+          this.fetchClassById()
+          this.fetchUsers()
+        })
     },
   },
 }
