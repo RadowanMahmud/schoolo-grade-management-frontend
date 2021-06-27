@@ -47,18 +47,18 @@
                       "
                       ><i class="bx bx-show"></i> <b> Tests</b></d-button
                     >
-                    <d-button
-                      size="sm"
-                      theme="primary"
-                      class="mr-2"
-                      @click="
-                        () => {
-                          selectedSubjectForSeeingPupilGrade = sub
-                          pupilGradeViewModal = true
-                        }
-                      "
-                      ><i class="bx bx-show"></i> <b>Grades</b></d-button
-                    >
+                    <!--                    <d-button-->
+                    <!--                      size="sm"-->
+                    <!--                      theme="primary"-->
+                    <!--                      class="mr-2"-->
+                    <!--                      @click="-->
+                    <!--                        () => {-->
+                    <!--                          selectedSubjectForSeeingPupilGrade = sub-->
+                    <!--                          pupilGradeViewModal = true-->
+                    <!--                        }-->
+                    <!--                      "-->
+                    <!--                      ><i class="bx bx-show"></i> <b>Grades</b></d-button-->
+                    <!--                    >-->
                     <d-button
                       v-if="sub.type === 0"
                       size="sm"
@@ -130,40 +130,40 @@
         </div>
       </d-col>
     </d-row>
-    <d-modal v-if="pupilGradeViewModal" @close="pupilGradeViewModal = false">
-      <d-modal-header v-if="selectedSubjectForSeeingPupilGrade">
-        <h5 class="page-title">
-          {{ selectedSubjectForSeeingPupilGrade.name }}
-        </h5>
-      </d-modal-header>
-      <d-modal-body>
-        <div class="card card-small mb-4 mt-2">
-          <div class="card-body p-0 pb-3 text-center">
-            <table class="table mb-0">
-              <thead class="bg-light">
-                <tr>
-                  <th scope="col" class="border-0">User Name</th>
-                  <th scope="col" class="border-0">Fore Name</th>
-                  <th scope="col" class="border-0">Sur Name</th>
-                  <th scope="col" class="border-0">Average Grade</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="pupil in selectedSubjectForSeeingPupilGrade.subjectpupils"
-                  :key="pupil.id"
-                >
-                  <td>{{ pupil.user.username }}</td>
-                  <td>{{ pupil.user.forename }}</td>
-                  <td>{{ pupil.user.surname }}</td>
-                  <td>{{ pupil.average_grade }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </d-modal-body>
-    </d-modal>
+    <!--    <d-modal v-if="pupilGradeViewModal" @close="pupilGradeViewModal = false">-->
+    <!--      <d-modal-header v-if="selectedSubjectForSeeingPupilGrade">-->
+    <!--        <h5 class="page-title">-->
+    <!--          {{ selectedSubjectForSeeingPupilGrade.name }}-->
+    <!--        </h5>-->
+    <!--      </d-modal-header>-->
+    <!--      <d-modal-body>-->
+    <!--        <div class="card card-small mb-4 mt-2">-->
+    <!--          <div class="card-body p-0 pb-3 text-center">-->
+    <!--            <table class="table mb-0">-->
+    <!--              <thead class="bg-light">-->
+    <!--                <tr>-->
+    <!--                  <th scope="col" class="border-0">User Name</th>-->
+    <!--                  <th scope="col" class="border-0">Fore Name</th>-->
+    <!--                  <th scope="col" class="border-0">Sur Name</th>-->
+    <!--                  <th scope="col" class="border-0">Average Grade</th>-->
+    <!--                </tr>-->
+    <!--              </thead>-->
+    <!--              <tbody>-->
+    <!--                <tr-->
+    <!--                  v-for="pupil in selectedSubjectForSeeingPupilGrade.subjectpupils"-->
+    <!--                  :key="pupil.id"-->
+    <!--                >-->
+    <!--                  <td>{{ pupil.user.username }}</td>-->
+    <!--                  <td>{{ pupil.user.forename }}</td>-->
+    <!--                  <td>{{ pupil.user.surname }}</td>-->
+    <!--                  <td>{{ pupil.average_grade }}</td>-->
+    <!--                </tr>-->
+    <!--              </tbody>-->
+    <!--            </table>-->
+    <!--          </div>-->
+    <!--        </div>-->
+    <!--      </d-modal-body>-->
+    <!--    </d-modal>-->
 
     <d-modal v-if="subjectEditModal" @close="subjectEditModal = false">
       <d-modal-header>
