@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="$hasPermission('modifyTests')"
+    v-if="$hasPermission('modifyTests') && subject !== null"
     class="main-content-container container-fluid px-4"
   >
     <div class="page-header row no-gutters py-4">
@@ -10,15 +10,18 @@
         <h5 class="page-title">
           {{ $moment(test.test_date).format('DD-MM-YYYY') }}
         </h5>
+        <d-badge v-if="subject.type === 1" theme="warning">Archived</d-badge>
       </div>
     </div>
     <d-row align-h="end" class="mx-auto">
       <AddTestPupil
+        v-if="subject.type === 0"
         :subject-id="test.subject_id"
         :test-id="test_id"
         :user-list="arrayOfEmptyPupils"
       ></AddTestPupil>
       <UpoladCSV
+        v-if="subject.type === 0"
         :subject-id="test.subject_id"
         :test-id="test_id"
         :user-list="classPupils"
@@ -33,7 +36,9 @@
               <th scope="col" class="border-0">Fore Name</th>
               <th scope="col" class="border-0">Sur Name</th>
               <th scope="col" class="border-0">Grade</th>
-              <th scope="col" class="border-0">Actions</th>
+              <th v-if="subject.type === 0" scope="col" class="border-0">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -42,7 +47,7 @@
               <td>{{ testpupil.user.forename }}</td>
               <td>{{ testpupil.user.surname }}</td>
               <td>{{ testpupil.grade }}</td>
-              <td style="align-content: center">
+              <td v-if="subject.type === 0" style="align-content: center">
                 <d-button
                   size="sm"
                   theme="info"
@@ -113,6 +118,7 @@ export default {
       gradeEditForm: { ...gradeEditFormTemplate },
       editGradeModal: false,
       selectedPupilForGradeEdit: null,
+      subject: null,
     }
   },
   mounted() {
@@ -125,6 +131,7 @@ export default {
       this.$axios.get(`tests/${this.test_id}`).then((res) => {
         if (res.status === 200) {
           this.test = res.data
+          this.subject = this.test.subject
           this.fetchClassPupilList(this.test.subject.klass_id)
         }
       })

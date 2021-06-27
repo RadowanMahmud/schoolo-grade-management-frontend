@@ -87,7 +87,14 @@
                   <td>{{ pupil.user.username }}</td>
                   <td>{{ pupil.user.forename }}</td>
                   <td>{{ pupil.user.surname }}</td>
-                  <td>{{ pupil.average_grade }}</td>
+                  <td>
+                    <div v-if="subject.teacher_id !== pupil.user.id">
+                      {{ pupil.average_grade }}
+                    </div>
+                    <div v-else>
+                      <d-badge theme="primary">Teacher</d-badge>
+                    </div>
+                  </td>
                 </tr>
               </tbody>
             </table>
