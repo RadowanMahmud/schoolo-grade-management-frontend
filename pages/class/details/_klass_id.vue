@@ -131,7 +131,17 @@
                   <td>{{ pupil.user.forename }}</td>
                   <td>{{ pupil.user.surname }}</td>
                   <td style="align-content: center">
-                    <d-button size="sm" theme="danger" outline class="mr-2"
+                    <d-button
+                      size="sm"
+                      theme="danger"
+                      outline
+                      class="mr-2"
+                      @click="
+                        () => {
+                          selectedpupilfordeassign = pupil.user
+                          deassignPupilModal = true
+                        }
+                      "
                       ><i class="bx bx-trash"></i> <b> Deassign</b></d-button
                     >
                   </td>
@@ -217,7 +227,7 @@
           <b>
             Are You sure You want to delete subject
             {{ selectedSubjectForDelete.name }}
-            ? Once it's archived, it can not be undone
+            ? Once it's deleted, it can not be undone
           </b>
         </div>
       </d-modal-body>
@@ -225,6 +235,32 @@
         <d-button theme="success" outline @click="deleteSubject"
           ><b>Yes</b></d-button
         >
+        <d-button
+          theme="danger"
+          outline
+          @click="subjectDeleteAssurityModal = false"
+          >No</d-button
+        >
+      </d-modal-footer>
+    </d-modal>
+
+    <d-modal v-if="deassignPupilModal" @close="deassignPupilModal = false">
+      <d-modal-header>
+        <d-modal-title
+          >Deassign {{ selectedpupilfordeassign.username }}</d-modal-title
+        >
+      </d-modal-header>
+      <d-modal-body>
+        <div class="row pb-2 ml-2">
+          <b>
+            Are You sure You want to deassign
+            {{ selectedpupilfordeassign.username }}
+            ?
+          </b>
+        </div>
+      </d-modal-body>
+      <d-modal-footer>
+        <d-button theme="success" outline><b>Yes</b></d-button>
         <d-button
           theme="danger"
           outline
@@ -268,6 +304,8 @@ export default {
       selectedArchivedSubject: null,
       subjectDeleteAssurityModal: false,
       selectedSubjectForDelete: false,
+      deassignPupilModal: false,
+      selectedpupilfordeassign: null,
     }
   },
   mounted() {

@@ -154,7 +154,7 @@
     <d-modal v-if="testdeleteModal" @close="testdeleteModal = false">
       <d-modal-header>
         <d-modal-title
-          >Delete Class {{ selectedTestForDelete.name }}</d-modal-title
+          >Delete Test {{ selectedTestForDelete.name }}</d-modal-title
         >
       </d-modal-header>
       <d-modal-body>
@@ -162,7 +162,7 @@
           <b>
             Are You sure You want to delete test
             {{ selectedTestForDelete.name }}
-            ? Once it's archived, it can not be undone
+            ? Once it's deleted, it can not be undone
           </b>
         </div>
       </d-modal-body>
