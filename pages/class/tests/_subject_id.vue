@@ -77,6 +77,14 @@
       </d-col>
       <d-col>
         <h5 class="page-title">Subject Pupil List</h5>
+        <d-row align-h="end" class="mx-auto">
+          <a
+            class="btn btn-info mr-2 mb-2 btn-sm"
+            target="_blank"
+            :href="getReportURL(`pdf/subject/${subject.id}/allpupils`)"
+            ><i class="bx bx-download mr-1"></i><b>Test Details</b>
+          </a>
+        </d-row>
         <div class="card card-small mb-4 mt-2">
           <div class="card-body p-0 pb-3 text-center">
             <table class="table mb-0">
@@ -237,6 +245,9 @@ export default {
           this.fetchTests()
           this.fetchSubjectById()
         })
+    },
+    getReportURL(query) {
+      return `http://127.0.0.1:8000/${query}`
     },
   },
 }
