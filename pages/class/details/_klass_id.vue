@@ -9,9 +9,15 @@
         <h3 class="page-title">{{ klass.name }}</h3>
       </div>
     </div>
-    <d-row>
+    <d-row align-h="start" class="mx-auto">
       <d-col cols="7">
         <h5 class="page-title">Subject List</h5>
+        <a
+          class="btn btn-success mr-2 mb-2 btn-sm"
+          target="_blank"
+          :href="getReportURL(`pdf/classes/${klass.id}/subjects`)"
+          ><i class="bx bx-download mr-1"></i><b>Subject List</b>
+        </a>
         <AddSubject :klass="klass" :teachers="teachers"></AddSubject>
         <div class="card card-small mb-4 mt-2">
           <div class="card-body p-0 pb-3 text-center">
@@ -90,6 +96,12 @@
                       size="sm"
                       theme="danger"
                       class="mr-2"
+                      @click="
+                        () => {
+                          selectedSubjectForDelete = sub
+                          subjectDeleteAssurityModal = true
+                        }
+                      "
                       ><i class="bx bx-trash"></i> <b>Delete</b></d-button
                     >
                   </td>
@@ -130,40 +142,6 @@
         </div>
       </d-col>
     </d-row>
-    <!--    <d-modal v-if="pupilGradeViewModal" @close="pupilGradeViewModal = false">-->
-    <!--      <d-modal-header v-if="selectedSubjectForSeeingPupilGrade">-->
-    <!--        <h5 class="page-title">-->
-    <!--          {{ selectedSubjectForSeeingPupilGrade.name }}-->
-    <!--        </h5>-->
-    <!--      </d-modal-header>-->
-    <!--      <d-modal-body>-->
-    <!--        <div class="card card-small mb-4 mt-2">-->
-    <!--          <div class="card-body p-0 pb-3 text-center">-->
-    <!--            <table class="table mb-0">-->
-    <!--              <thead class="bg-light">-->
-    <!--                <tr>-->
-    <!--                  <th scope="col" class="border-0">User Name</th>-->
-    <!--                  <th scope="col" class="border-0">Fore Name</th>-->
-    <!--                  <th scope="col" class="border-0">Sur Name</th>-->
-    <!--                  <th scope="col" class="border-0">Average Grade</th>-->
-    <!--                </tr>-->
-    <!--              </thead>-->
-    <!--              <tbody>-->
-    <!--                <tr-->
-    <!--                  v-for="pupil in selectedSubjectForSeeingPupilGrade.subjectpupils"-->
-    <!--                  :key="pupil.id"-->
-    <!--                >-->
-    <!--                  <td>{{ pupil.user.username }}</td>-->
-    <!--                  <td>{{ pupil.user.forename }}</td>-->
-    <!--                  <td>{{ pupil.user.surname }}</td>-->
-    <!--                  <td>{{ pupil.average_grade }}</td>-->
-    <!--                </tr>-->
-    <!--              </tbody>-->
-    <!--            </table>-->
-    <!--          </div>-->
-    <!--        </div>-->
-    <!--      </d-modal-body>-->
-    <!--    </d-modal>-->
 
     <d-modal v-if="subjectEditModal" @close="subjectEditModal = false">
       <d-modal-header>
@@ -224,6 +202,37 @@
         >
       </d-modal-footer>
     </d-modal>
+
+    <d-modal
+      v-if="subjectDeleteAssurityModal"
+      @close="subjectDeleteAssurityModal = false"
+    >
+      <d-modal-header>
+        <d-modal-title
+          >Delete Class {{ selectedSubjectForDelete.name }}</d-modal-title
+        >
+      </d-modal-header>
+      <d-modal-body>
+        <div class="row pb-2 ml-2">
+          <b>
+            Are You sure You want to delete subject
+            {{ selectedSubjectForDelete.name }}
+            ? Once it's archived, it can not be undone
+          </b>
+        </div>
+      </d-modal-body>
+      <d-modal-footer>
+        <d-button theme="success" outline @click="deleteSubject"
+          ><b>Yes</b></d-button
+        >
+        <d-button
+          theme="danger"
+          outline
+          @click="subjectDeleteAssurityModal = false"
+          >No</d-button
+        >
+      </d-modal-footer>
+    </d-modal>
   </div>
 </template>
 
@@ -257,6 +266,8 @@ export default {
       selectedTeacherOnEdit: null,
       archiveAsurityModal: false,
       selectedArchivedSubject: null,
+      subjectDeleteAssurityModal: false,
+      selectedSubjectForDelete: false,
     }
   },
   mounted() {
@@ -320,6 +331,18 @@ export default {
           this.fetchClassById()
           this.fetchUsers()
         })
+    },
+    deleteSubject() {
+      this.$axios
+        .delete(`/delete/subjects/${this.selectedSubjectForDelete.id}`)
+        .then((res) => {
+          this.subjectDeleteAssurityModal = false
+          this.fetchClassById()
+          this.fetchUsers()
+        })
+    },
+    getReportURL(query) {
+      return `http://127.0.0.1:8000/${query}`
     },
   },
 }

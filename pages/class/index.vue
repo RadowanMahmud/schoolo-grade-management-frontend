@@ -14,6 +14,12 @@
     </div>
 
     <d-row align-h="end" class="mx-auto">
+      <a
+        class="btn btn-primary mr-2 btn-sm"
+        target="_blank"
+        :href="getReportURL('pdf/classes/all')"
+        ><i class="bx bx-download mr-1"></i>Download Class List
+      </a>
       <d-button
         v-if="this.$hasPermission('createClass')"
         outline
@@ -148,7 +154,9 @@
       @close="classDeleteAssurityModal = false"
     >
       <d-modal-header>
-        <d-modal-title>Delete Class</d-modal-title>
+        <d-modal-title
+          >Delete Class {{ selectedClassForDelete.name }}</d-modal-title
+        >
       </d-modal-header>
       <d-modal-body>
         <div class="row pb-2 ml-2">
@@ -253,6 +261,9 @@ export default {
           this.classDeleteAssurityModal = false
           this.fetchClasses()
         })
+    },
+    getReportURL(query) {
+      return `http://127.0.0.1:8000/${query}`
     },
   },
 }
