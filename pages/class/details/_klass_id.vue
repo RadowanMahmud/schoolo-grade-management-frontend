@@ -45,7 +45,7 @@
                           params: { subject_id: sub.id },
                         })
                       "
-                      ><i class="bx bx-show"></i> <b> Tests</b></d-button
+                      ><i class="bx bx-show"></i> <b> Details</b></d-button
                     >
                     <!--                    <d-button-->
                     <!--                      size="sm"-->
@@ -73,7 +73,7 @@
                       ><i class="bx bx-edit"></i> <b>Edit</b></d-button
                     >
                     <d-button
-                      v-if="sub.type === 0"
+                      v-if="sub.type === 0 && sub.tests.length > 0"
                       size="sm"
                       theme="warning"
                       class="mr-2"
@@ -86,7 +86,7 @@
                       ><i class="bx bx-folder"></i> <b>Archive</b></d-button
                     >
                     <d-button
-                      v-if="sub.type === 0"
+                      v-if="sub.type === 0 && sub.tests.length <= 0"
                       size="sm"
                       theme="danger"
                       class="mr-2"
