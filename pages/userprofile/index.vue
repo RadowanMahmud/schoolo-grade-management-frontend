@@ -89,10 +89,17 @@ export default {
       })
     },
     updateUser() {
-      this.$axios.put('users', this.userEditForm).then((res) => {
-        this.userEditForm = { ...userFormTemplate }
-        this.fetchUsers()
-      })
+      this.$axios
+        .put('users', this.userEditForm)
+        .then((res) => {
+          this.userEditForm = { ...userFormTemplate }
+          this.fetchUserByid()
+        })
+        .catch((err) => {
+          alert(err.toString())
+          this.userEditForm = { ...userFormTemplate }
+          this.fetchUserByid()
+        })
     },
   },
 }

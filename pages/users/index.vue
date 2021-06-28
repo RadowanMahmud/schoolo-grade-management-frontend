@@ -288,15 +288,23 @@ export default {
       this.userEditForm.username = this.selectedUserForEdit.username
       this.userEditForm.forename = this.selectedUserForEdit.forename
       this.userEditForm.surname = this.selectedUserForEdit.surname
-
-      this.$axios.put('users', this.userEditForm).then((res) => {
-        // if (res.status === 201) {
-        this.userEditModal = false
-        this.userEditForm = { ...userEditFormTemplate }
-        this.selectedUserForEdit = null
-        this.fetchUsers()
-        // }
-      })
+      this.$axios
+        .put('users', this.userEditForm)
+        .then((res) => {
+          if (res.status === 201) {
+            this.userEditModal = false
+            this.userEditForm = { ...userEditFormTemplate }
+            this.selectedUserForEdit = null
+            this.fetchUsers()
+          }
+        })
+        .catch((err) => {
+          alert(err.toString())
+          this.userEditModal = false
+          this.userEditForm = { ...userEditFormTemplate }
+          this.selectedUserForEdit = null
+          this.fetchUsers()
+        })
     },
     getTheme(role) {
       if (role === 'admin') {
