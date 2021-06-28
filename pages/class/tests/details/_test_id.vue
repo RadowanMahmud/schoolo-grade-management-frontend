@@ -14,6 +14,12 @@
       </div>
     </div>
     <d-row align-h="end" class="mx-auto">
+      <a
+        class="btn btn-info mr-2 mb-2 btn-sm"
+        target="_blank"
+        :href="getReportURL(`pdf/test/${test.id}/details`)"
+        ><i class="bx bx-download mr-1"></i><b>Test Details</b>
+      </a>
       <AddTestPupil
         v-if="subject.type === 0"
         :subject-id="test.subject_id"
@@ -59,9 +65,6 @@
                     }
                   "
                   ><i class="bx bx-edit"></i> <b> Edit</b></d-button
-                >
-                <d-button size="sm" theme="danger" outline class="mr-2"
-                  ><i class="bx bx-trash"></i> <b> Delete </b></d-button
                 >
               </td>
             </tr>
@@ -169,6 +172,9 @@ export default {
           this.fetchTestById()
         }
       })
+    },
+    getReportURL(query) {
+      return `http://127.0.0.1:8000/${query}`
     },
   },
 }

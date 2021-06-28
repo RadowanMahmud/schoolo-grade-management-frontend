@@ -60,6 +60,12 @@
                       theme="danger"
                       outline
                       class="mr-2"
+                      @click="
+                        () => {
+                          testdeleteModal = true
+                          selectedTestForDelete = test
+                        }
+                      "
                       ><i class="bx bx-trash"></i> <b> Delete </b></d-button
                     >
                   </td>
@@ -70,7 +76,7 @@
         </div>
       </d-col>
       <d-col>
-        <h5 class="page-title">Pupil List</h5>
+        <h5 class="page-title">Subject Pupil List</h5>
         <div class="card card-small mb-4 mt-2">
           <div class="card-body p-0 pb-3 text-center">
             <table class="table mb-0">
@@ -136,6 +142,31 @@
         </div>
       </d-modal-body>
     </d-modal>
+
+    <d-modal v-if="testdeleteModal" @close="testdeleteModal = false">
+      <d-modal-header>
+        <d-modal-title
+          >Delete Class {{ selectedTestForDelete.name }}</d-modal-title
+        >
+      </d-modal-header>
+      <d-modal-body>
+        <div class="row pb-2 ml-2">
+          <b>
+            Are You sure You want to delete test
+            {{ selectedTestForDelete.name }}
+            ? Once it's archived, it can not be undone
+          </b>
+        </div>
+      </d-modal-body>
+      <d-modal-footer>
+        <d-button theme="success" outline @click="deleteTest"
+          ><b>Yes</b></d-button
+        >
+        <d-button theme="danger" outline @click="testdeleteModal = false"
+          >No</d-button
+        >
+      </d-modal-footer>
+    </d-modal>
   </div>
 </template>
 
@@ -160,6 +191,8 @@ export default {
       testEditModal: false,
       selectedTestForEdit: null,
       testEditForm: { ...testEditFormTemplate },
+      testdeleteModal: false,
+      selectedTestForDelete: null,
     }
   },
   mounted() {
@@ -193,6 +226,17 @@ export default {
           this.fetchSubjectById()
         }
       })
+    },
+    deleteTest() {
+      this.$axios
+        .delete(
+          `subjects/${this.subject.id}/tests/${this.selectedTestForDelete.id}`
+        )
+        .then((res) => {
+          this.testdeleteModal = false
+          this.fetchTests()
+          this.fetchSubjectById()
+        })
     },
   },
 }

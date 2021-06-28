@@ -132,7 +132,7 @@
                   <td>{{ pupil.user.surname }}</td>
                   <td style="align-content: center">
                     <d-button size="sm" theme="danger" outline class="mr-2"
-                      ><i class="bx bx-trash"></i> <b> Delete</b></d-button
+                      ><i class="bx bx-trash"></i> <b> Deassign</b></d-button
                     >
                   </td>
                 </tr>
