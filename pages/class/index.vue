@@ -186,9 +186,7 @@ export default {
             this.totalRows = response.data.total
           })
       } else {
-        console.log(this.getUser.id)
         this.$axios.get(`classes/users/${this.getUser.id}`).then((response) => {
-          console.log('teacher = ', response.data)
           this.classes = response.data
           this.perPage = response.data.per_page
           this.totalRows = response.data.total

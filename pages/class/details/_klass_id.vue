@@ -292,10 +292,6 @@ export default {
         if (this.getUser.roles[0].name === 'teacher') {
           this.forTeacherOnly()
         }
-        // console.log(
-        //   `id=${this.getUser.id}, role=${this.getUser.roles[0].name}, user_id=${this.getUser.user_id}`
-        // )
-        // console.log(res.data.subjects[0].teacher_id)
       })
     },
     fetchUsers() {

@@ -80,7 +80,6 @@ export default {
   methods: {
     fetchUserByid() {
       this.$axios.get(`users/${this.getUser.id}`).then((response) => {
-        console.log('User = ', response.data)
         this.userEditForm.username = response.data.username
         this.userEditForm.forename = response.data.forename
         this.userEditForm.surname = response.data.surname

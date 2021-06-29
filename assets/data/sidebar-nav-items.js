@@ -67,7 +67,10 @@ export default function () {
     {
       title: 'Message',
       htmlBefore: '<i class="bx bx-bar-chart" style="font-size: 1.2rem"></i>',
-      to: {},
+      //  htmlBefore: '<i class="bx bxs-book-content" style="font-size: 1.2rem"></i>',
+      to: {
+        name: 'messages',
+      },
     },
   ]
 }
