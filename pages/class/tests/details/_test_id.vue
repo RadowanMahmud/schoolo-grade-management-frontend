@@ -14,6 +14,12 @@
       </div>
     </div>
     <d-row align-h="end" class="mx-auto">
+      <a
+        class="btn btn-info mr-2 mb-2 btn-sm"
+        target="_blank"
+        :href="getReportURL(`pdf/test/${test.id}/details`)"
+        ><i class="bx bx-download mr-1"></i><b>Test Details</b>
+      </a>
       <AddTestPupil
         v-if="subject.type === 0 && $hasPermission('modifyTests')"
         :subject-id="test.subject_id"
@@ -47,7 +53,9 @@
           </thead>
           <tbody>
             <tr v-for="(testpupil, idx) in test.testpupils" :key="idx">
-              <td>{{ testpupil.user.username }}</td>
+              <td>
+                {{ testpupil.user.username }}
+              </td>
               <td>{{ testpupil.user.forename }}</td>
               <td>{{ testpupil.user.surname }}</td>
               <td>{{ testpupil.grade }}</td>
@@ -57,6 +65,7 @@
                 style="align-content: center"
               >
                 <d-button
+                  v-if="testpupil.deassign === 0"
                   size="sm"
                   theme="info"
                   class="mr-2"
@@ -68,8 +77,8 @@
                   "
                   ><i class="bx bx-edit"></i> <b> Edit</b></d-button
                 >
-                <d-button size="sm" theme="danger" outline class="mr-2"
-                  ><i class="bx bx-trash"></i> <b> Delete </b></d-button
+                <d-badge v-if="testpupil.deassign === 1" theme="warning"
+                  >Archived</d-badge
                 >
               </td>
             </tr>
@@ -177,6 +186,9 @@ export default {
           this.fetchTestById()
         }
       })
+    },
+    getReportURL(query) {
+      return `http://127.0.0.1:8000/${query}`
     },
   },
 }

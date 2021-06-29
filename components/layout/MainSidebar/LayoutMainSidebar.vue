@@ -27,15 +27,15 @@
           style="line-height: 25px"
         >
           <div class="d-table m-auto">
-            <img
-              id="main-logo"
-              class="d-inline-block align-top mr-1"
-              style="max-width: 25px"
-              src="/images/bhl.png"
-              alt="SGM Dashboard"
-            />
+            <!--            <img-->
+            <!--              id="main-logo"-->
+            <!--              class="d-inline-block align-top mr-1"-->
+            <!--              style="max-width: 25px"-->
+            <!--              src="/images/bhl.png"-->
+            <!--              alt="SGM Dashboard"-->
+            <!--            />-->
             <span v-if="!hideLogoText" class="d-none d-md-inline ml-1"
-              >Student Grade Management</span
+              >School Management System</span
             >
           </div>
         </d-link>

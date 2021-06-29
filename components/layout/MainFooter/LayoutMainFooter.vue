@@ -13,7 +13,7 @@ export default {
   props: {
     copyright: {
       type: String,
-      default: `Copyright © ${new Date().getFullYear()} Student Grade Management`,
+      default: `Copyright © ${new Date().getFullYear()} School Management System`,
     },
   },
 }

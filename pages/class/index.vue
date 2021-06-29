@@ -11,6 +11,12 @@
     </div>
 
     <d-row align-h="end" class="mx-auto">
+      <a
+        class="btn btn-primary mr-2 btn-sm"
+        target="_blank"
+        :href="getReportURL('pdf/classes/all')"
+        ><i class="bx bx-download mr-1"></i>Download Class List
+      </a>
       <d-button
         v-if="this.$hasPermission('justAdmin')"
         outline
@@ -69,6 +75,12 @@
                   size="sm"
                   theme="outline-danger"
                   class="mr-2"
+                  @click="
+                    () => {
+                      selectedClassForDelete = classList
+                      classDeleteAssurityModal = true
+                    }
+                  "
                   ><i class="bx bx-trash"></i> <b>Delete</b></d-button
                 >
               </td>
@@ -138,6 +150,36 @@
         </div>
       </d-modal-body>
     </d-modal>
+    <d-modal
+      v-if="classDeleteAssurityModal"
+      @close="classDeleteAssurityModal = false"
+    >
+      <d-modal-header>
+        <d-modal-title
+          >Delete Class {{ selectedClassForDelete.name }}</d-modal-title
+        >
+      </d-modal-header>
+      <d-modal-body>
+        <div class="row pb-2 ml-2">
+          <b>
+            Are You sure You want to delete class
+            {{ selectedClassForDelete.name }}
+            ? Once it's archived, it can not be undone
+          </b>
+        </div>
+      </d-modal-body>
+      <d-modal-footer>
+        <d-button theme="success" outline @click="deleteClass"
+          ><b>Yes</b></d-button
+        >
+        <d-button
+          theme="danger"
+          outline
+          @click="classDeleteAssurityModal = false"
+          >No</d-button
+        >
+      </d-modal-footer>
+    </d-modal>
   </div>
 </template>
 <script>
@@ -159,9 +201,11 @@ export default {
     classes: [],
     classAddModal: false,
     classEditModal: false,
+    classDeleteAssurityModal: false,
     selectedClassForEdit: null,
     classCreateForm: { ...classCreateFormTemplate },
     classEditForm: { ...classEditFormTemplate },
+    selectedClassForDelete: null,
   }),
   computed: {
     ...mapGetters(['getUser']),
@@ -226,6 +270,17 @@ export default {
           this.fetchClasses()
           this.classEditForm = { ...classEditFormTemplate }
         })
+    },
+    deleteClass() {
+      this.$axios
+        .delete(`/delete/classes/${this.selectedClassForDelete.id}`)
+        .then((res) => {
+          this.classDeleteAssurityModal = false
+          this.fetchClasses()
+        })
+    },
+    getReportURL(query) {
+      return `http://127.0.0.1:8000/${query}`
     },
   },
 }

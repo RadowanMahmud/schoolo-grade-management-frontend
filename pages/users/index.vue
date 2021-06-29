@@ -12,6 +12,12 @@
     </div>
 
     <d-row align-h="end" class="mx-auto">
+      <a
+        class="btn btn-info mr-2 mb-2 btn-sm"
+        target="_blank"
+        :href="getReportURL(`pdf/users/all`)"
+        ><i class="bx bx-download mr-1"></i><b>Download User List</b>
+      </a>
       <d-button
         v-if="this.$hasPermission('CreateUser')"
         outline
@@ -67,7 +73,16 @@
                     "
                     ><i class="bx bx-edit"></i> <b></b
                   ></d-button>
-                  <d-button size="sm" theme="outline-danger" class="mr-2"
+                  <d-button
+                    size="sm"
+                    theme="outline-danger"
+                    class="mr-2"
+                    @click="
+                      () => {
+                        selectedUserForDelete = user
+                        userDeleteModal = true
+                      }
+                    "
                     ><i class="bx bx-trash"></i> <b></b
                   ></d-button>
                 </d-row>
@@ -215,6 +230,38 @@
         </div>
       </d-modal-body>
     </d-modal>
+
+    <d-modal v-if="userDeleteModal" @close="userDeleteModal = false">
+      <d-modal-header>
+        <d-modal-title
+          >Delete Test {{ selectedUserForDelete.username }}</d-modal-title
+        >
+      </d-modal-header>
+      <d-modal-body>
+        <div class="row pb-2 ml-2">
+          <b>
+            Are You sure You want to delete test
+            {{ selectedUserForDelete.username }}
+            ? Once it's deleted, it can not be undone
+          </b>
+        </div>
+        <small
+          >Admins and teachers assigned to subjects can not be deleted</small
+        >
+      </d-modal-body>
+      <d-modal-footer>
+        <d-button
+          v-if="selectedUserForDelete.roles[0].name !== 'super_admin'"
+          theme="success"
+          outline
+          @click="deleteUser"
+          ><b>Yes</b></d-button
+        >
+        <d-button theme="danger" outline @click="userDeleteModal = false"
+          >No</d-button
+        >
+      </d-modal-footer>
+    </d-modal>
   </div>
 </template>
 
@@ -233,6 +280,10 @@ const userEditFormTemplate = {
   user_id: '',
   id: '',
 }
+const userDeleteFormTemplate = {
+  user_id: '',
+  role: '',
+}
 export default {
   name: 'Users',
   data: () => ({
@@ -242,9 +293,12 @@ export default {
     users: [],
     userAddModal: false,
     userEditModal: false,
+    userDeleteModal: false,
     selectedUserForEdit: null,
+    selectedUserForDelete: null,
     userCreateForm: { ...userCreateFormTemplate },
     userEditForm: { ...userEditFormTemplate },
+    userDeleteForm: { ...userDeleteFormTemplate },
     role_options: [
       { value: 'admin', text: 'Admin' },
       { value: 'teacher', text: 'Teacher' },
@@ -263,7 +317,8 @@ export default {
       this.$axios
         .get(`users/paginated?page=${this.currentPage + 1}`)
         .then((response) => {
-          this.users = response.data.data
+          const temp = response.data.data
+          this.users = temp.filter((u) => u.roles[0].name !== 'super_admin')
           this.perPage = response.data.per_page
           this.totalRows = response.data.total
           // this.users.forEach((data) => {
@@ -316,6 +371,19 @@ export default {
       } else {
         return 'primary'
       }
+    },
+    deleteUser() {
+      this.userDeleteForm.user_id = this.selectedUserForDelete.id
+      this.userDeleteForm.role = this.selectedUserForDelete.roles[0].name
+      this.$axios.put('delete/users', this.userDeleteForm).then((res) => {
+        this.userDeleteModal = false
+        this.userDeleteForm = { ...userDeleteFormTemplate }
+        this.selectedUserForDelete = null
+        this.fetchUsers()
+      })
+    },
+    getReportURL(query) {
+      return `http://127.0.0.1:8000/${query}`
     },
   },
 }

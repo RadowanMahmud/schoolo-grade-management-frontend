@@ -9,12 +9,19 @@
         <h3 class="page-title">{{ klass.name }}</h3>
       </div>
     </div>
-    <d-row>
+    <d-row align-h="start" class="mx-auto">
       <d-col cols="7">
         <h5 class="page-title">Subject List</h5>
-        <div v-if="$hasPermission('justAdmin')">
+
+        <d-row v-if="$hasPermission('justAdmin')" class="ml-1">
+          <a
+            class="btn btn-success mr-2 mb-2 btn-sm"
+            target="_blank"
+            :href="getReportURL(`pdf/classes/${klass.id}/subjects`)"
+            ><i class="bx bx-download mr-1"></i><b>Subject List</b>
+          </a>
           <AddSubject :klass="klass" :teachers="teachers"></AddSubject>
-        </div>
+        </d-row>
         <div class="card card-small mb-4 mt-2">
           <div class="card-body p-0 pb-3 text-center">
             <table class="table mb-0">
@@ -47,7 +54,7 @@
                           params: { subject_id: sub.id },
                         })
                       "
-                      ><i class="bx bx-show"></i> <b> Tests</b></d-button
+                      ><i class="bx bx-show"></i> <b> Details</b></d-button
                     >
                     <!--                    <d-button-->
                     <!--                      size="sm"-->
@@ -75,7 +82,11 @@
                       ><i class="bx bx-edit"></i> <b>Edit</b></d-button
                     >
                     <d-button
-                      v-if="sub.type === 0 && $hasPermission('justAdmin')"
+                      v-if="
+                        sub.type === 0 &&
+                        sub.tests.length > 0 &&
+                        $hasPermission('justAdmin')
+                      "
                       size="sm"
                       theme="warning"
                       class="mr-2"
@@ -88,10 +99,20 @@
                       ><i class="bx bx-folder"></i> <b>Archive</b></d-button
                     >
                     <d-button
-                      v-if="sub.type === 0 && $hasPermission('justAdmin')"
+                      v-if="
+                        sub.type === 0 &&
+                        sub.tests.length <= 0 &&
+                        $hasPermission('justAdmin')
+                      "
                       size="sm"
                       theme="danger"
                       class="mr-2"
+                      @click="
+                        () => {
+                          selectedSubjectForDelete = sub
+                          subjectDeleteAssurityModal = true
+                        }
+                      "
                       ><i class="bx bx-trash"></i> <b>Delete</b></d-button
                     >
                   </td>
@@ -129,12 +150,23 @@
                   <td>{{ pupil.user.username }}</td>
                   <td>{{ pupil.user.forename }}</td>
                   <td>{{ pupil.user.surname }}</td>
+
                   <td
                     v-if="$hasPermission('justAdmin')"
                     style="align-content: center"
                   >
-                    <d-button size="sm" theme="danger" outline class="mr-2"
-                      ><i class="bx bx-trash"></i> <b> Delete</b></d-button
+                    <d-button
+                      size="sm"
+                      theme="danger"
+                      outline
+                      class="mr-2"
+                      @click="
+                        () => {
+                          selectedpupilfordeassign = pupil
+                          deassignPupilModal = true
+                        }
+                      "
+                      ><i class="bx bx-trash"></i> <b> Deassign</b></d-button
                     >
                   </td>
                 </tr>
@@ -144,40 +176,6 @@
         </div>
       </d-col>
     </d-row>
-    <!--    <d-modal v-if="pupilGradeViewModal" @close="pupilGradeViewModal = false">-->
-    <!--      <d-modal-header v-if="selectedSubjectForSeeingPupilGrade">-->
-    <!--        <h5 class="page-title">-->
-    <!--          {{ selectedSubjectForSeeingPupilGrade.name }}-->
-    <!--        </h5>-->
-    <!--      </d-modal-header>-->
-    <!--      <d-modal-body>-->
-    <!--        <div class="card card-small mb-4 mt-2">-->
-    <!--          <div class="card-body p-0 pb-3 text-center">-->
-    <!--            <table class="table mb-0">-->
-    <!--              <thead class="bg-light">-->
-    <!--                <tr>-->
-    <!--                  <th scope="col" class="border-0">User Name</th>-->
-    <!--                  <th scope="col" class="border-0">Fore Name</th>-->
-    <!--                  <th scope="col" class="border-0">Sur Name</th>-->
-    <!--                  <th scope="col" class="border-0">Average Grade</th>-->
-    <!--                </tr>-->
-    <!--              </thead>-->
-    <!--              <tbody>-->
-    <!--                <tr-->
-    <!--                  v-for="pupil in selectedSubjectForSeeingPupilGrade.subjectpupils"-->
-    <!--                  :key="pupil.id"-->
-    <!--                >-->
-    <!--                  <td>{{ pupil.user.username }}</td>-->
-    <!--                  <td>{{ pupil.user.forename }}</td>-->
-    <!--                  <td>{{ pupil.user.surname }}</td>-->
-    <!--                  <td>{{ pupil.average_grade }}</td>-->
-    <!--                </tr>-->
-    <!--              </tbody>-->
-    <!--            </table>-->
-    <!--          </div>-->
-    <!--        </div>-->
-    <!--      </d-modal-body>-->
-    <!--    </d-modal>-->
 
     <d-modal v-if="subjectEditModal" @close="subjectEditModal = false">
       <d-modal-header>
@@ -238,6 +236,62 @@
         >
       </d-modal-footer>
     </d-modal>
+
+    <d-modal
+      v-if="subjectDeleteAssurityModal"
+      @close="subjectDeleteAssurityModal = false"
+    >
+      <d-modal-header>
+        <d-modal-title
+          >Delete Class {{ selectedSubjectForDelete.name }}</d-modal-title
+        >
+      </d-modal-header>
+      <d-modal-body>
+        <div class="row pb-2 ml-2">
+          <b>
+            Are You sure You want to delete subject
+            {{ selectedSubjectForDelete.name }}
+            ? Once it's deleted, it can not be undone
+          </b>
+        </div>
+      </d-modal-body>
+      <d-modal-footer>
+        <d-button theme="success" outline @click="deleteSubject"
+          ><b>Yes</b></d-button
+        >
+        <d-button
+          theme="danger"
+          outline
+          @click="subjectDeleteAssurityModal = false"
+          >No</d-button
+        >
+      </d-modal-footer>
+    </d-modal>
+
+    <d-modal v-if="deassignPupilModal" @close="deassignPupilModal = false">
+      <d-modal-header>
+        <d-modal-title
+          >Deassign {{ selectedpupilfordeassign.username }}</d-modal-title
+        >
+      </d-modal-header>
+      <d-modal-body>
+        <div class="row pb-2 ml-2">
+          <b>
+            Are You sure You want to deassign
+            {{ selectedpupilfordeassign.username }}
+            ?
+          </b>
+        </div>
+      </d-modal-body>
+      <d-modal-footer>
+        <d-button theme="success" outline @click="deassignUser"
+          ><b>Yes</b></d-button
+        >
+        <d-button theme="danger" outline @click="deassignPupilModal = false"
+          >No</d-button
+        >
+      </d-modal-footer>
+    </d-modal>
   </div>
 </template>
 
@@ -273,6 +327,10 @@ export default {
       selectedTeacherOnEdit: null,
       archiveAsurityModal: false,
       selectedArchivedSubject: null,
+      subjectDeleteAssurityModal: false,
+      selectedSubjectForDelete: false,
+      deassignPupilModal: false,
+      selectedpupilfordeassign: null,
     }
   },
   computed: {
@@ -346,6 +404,32 @@ export default {
           this.fetchClassById()
           this.fetchUsers()
         })
+    },
+    deleteSubject() {
+      this.$axios
+        .delete(`/delete/subjects/${this.selectedSubjectForDelete.id}`)
+        .then((res) => {
+          this.subjectDeleteAssurityModal = false
+          this.fetchClassById()
+          this.fetchUsers()
+        })
+    },
+    deassignUser() {
+      this.klass_id = this.$route.params.klass_id
+      this.$axios
+        .put(
+          `deassign/classes/${this.klass_id}/user/${this.selectedpupilfordeassign.user.id}`
+        )
+        .then((res) => {
+          this.deassignPupilModal = false
+          this.klass_id = this.$route.params.klass_id
+          this.selectedpupilfordeassign = null
+          this.fetchClassById()
+          this.fetchUsers()
+        })
+    },
+    getReportURL(query) {
+      return `http://127.0.0.1:8000/${query}`
     },
   },
 }

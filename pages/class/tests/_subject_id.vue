@@ -63,6 +63,12 @@
                       theme="danger"
                       outline
                       class="mr-2"
+                      @click="
+                        () => {
+                          testdeleteModal = true
+                          selectedTestForDelete = test
+                        }
+                      "
                       ><i class="bx bx-trash"></i> <b> Delete </b></d-button
                     >
                   </td>
@@ -73,7 +79,15 @@
         </div>
       </d-col>
       <d-col>
-        <h5 class="page-title">Pupil List</h5>
+        <h5 class="page-title">Subject Pupil List</h5>
+        <d-row align-h="end" class="mx-auto">
+          <a
+            class="btn btn-info mr-2 mb-2 btn-sm"
+            target="_blank"
+            :href="getReportURL(`pdf/subject/${subject.id}/allpupils`)"
+            ><i class="bx bx-download mr-1"></i><b>Test Details</b>
+          </a>
+        </d-row>
         <div class="card card-small mb-4 mt-2">
           <div class="card-body p-0 pb-3 text-center">
             <table class="table mb-0">
@@ -87,7 +101,12 @@
               </thead>
               <tbody>
                 <tr v-for="pupil in subject.subjectpupils" :key="pupil.id">
-                  <td>{{ pupil.user.username }}</td>
+                  <td>
+                    {{ pupil.user.username }}
+                    <d-badge v-if="pupil.deassign === 1" theme="warning"
+                      >Archived</d-badge
+                    >
+                  </td>
                   <td>{{ pupil.user.forename }}</td>
                   <td>{{ pupil.user.surname }}</td>
                   <td>
@@ -139,6 +158,31 @@
         </div>
       </d-modal-body>
     </d-modal>
+
+    <d-modal v-if="testdeleteModal" @close="testdeleteModal = false">
+      <d-modal-header>
+        <d-modal-title
+          >Delete Test {{ selectedTestForDelete.name }}</d-modal-title
+        >
+      </d-modal-header>
+      <d-modal-body>
+        <div class="row pb-2 ml-2">
+          <b>
+            Are You sure You want to delete test
+            {{ selectedTestForDelete.name }}
+            ? Once it's deleted, it can not be undone
+          </b>
+        </div>
+      </d-modal-body>
+      <d-modal-footer>
+        <d-button theme="success" outline @click="deleteTest"
+          ><b>Yes</b></d-button
+        >
+        <d-button theme="danger" outline @click="testdeleteModal = false"
+          >No</d-button
+        >
+      </d-modal-footer>
+    </d-modal>
   </div>
 </template>
 
@@ -163,6 +207,8 @@ export default {
       testEditModal: false,
       selectedTestForEdit: null,
       testEditForm: { ...testEditFormTemplate },
+      testdeleteModal: false,
+      selectedTestForDelete: null,
     }
   },
   mounted() {
@@ -195,6 +241,20 @@ export default {
           this.fetchSubjectById()
         }
       })
+    },
+    deleteTest() {
+      this.$axios
+        .delete(
+          `subjects/${this.subject.id}/tests/${this.selectedTestForDelete.id}`
+        )
+        .then((res) => {
+          this.testdeleteModal = false
+          this.fetchTests()
+          this.fetchSubjectById()
+        })
+    },
+    getReportURL(query) {
+      return `http://127.0.0.1:8000/${query}`
     },
   },
 }
