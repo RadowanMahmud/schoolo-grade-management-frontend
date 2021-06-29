@@ -82,6 +82,7 @@ export default {
       this.subjectCreationModal = false
       if (this.selectedTeacher !== null && this.subjectCreateForm.name !== '') {
         this.subjectCreateForm.teacher_id = this.selectedTeacher.id
+        this.subjectCreateForm.klass_id = this.klass.id
         this.$axios.post('subjects', this.subjectCreateForm).then((res) => {
           this.subjectCreationModal = false
           this.subjectCreateForm = { ...subjectCreateFormTemplate }

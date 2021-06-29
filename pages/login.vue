@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <d-container>
     <div
       class="card mx-auto shadow-lg example2"
-      style="width: 25rem; margin-top: 20vh; background-color: #ebd8bc"
+      style="width: 32rem; margin-top: 30vh; background-color: #de6a4e"
     >
       <!--      <img class="card-img-top p-4" src="" alt="Doinik Ishtehaar logo" />-->
       <h5 class="pt-3 pl-5">Student Grade Management</h5>
@@ -43,7 +43,7 @@
         </d-form>
       </div>
     </div>
-  </div>
+  </d-container>
 </template>
 
 <script>

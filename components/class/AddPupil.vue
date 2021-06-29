@@ -23,7 +23,7 @@
                 <template>
                   <v-select
                     v-model="pupilList[idx]"
-                    placeholder="Select Teacher"
+                    placeholder="Select Student"
                     required
                     :options="pupils"
                     :get-option-label="(option) => option.username"
@@ -106,6 +106,7 @@ export default {
         pupilstemparr.push(this.pupilList[i].id)
       }
       this.addPupilForm.pupils = [...new Set(pupilstemparr)]
+      this.addPupilForm.klass_id = this.klass.id
       if (this.addPupilForm.pupils.length > 0) {
         this.$axios
           .post('/classes/pupils/add', this.addPupilForm)

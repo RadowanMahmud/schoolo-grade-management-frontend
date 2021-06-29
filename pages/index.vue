@@ -26,9 +26,9 @@
         <d-button
           v-if="this.$hasPermission('createSubject')"
           size="sm"
-          @click="$router.push({ name: 'subject' })"
+          @click="$router.push({ name: 'users' })"
         >
-          <i class="bx bx-plus mr-2"></i>List Of Subjects
+          <i class="bx bx-plus mr-2"></i>List Of Users
         </d-button>
       </d-col>
     </d-row>

@@ -12,13 +12,15 @@
     <d-row align-h="start" class="mx-auto">
       <d-col cols="7">
         <h5 class="page-title">Subject List</h5>
-        <a
-          class="btn btn-success mr-2 mb-2 btn-sm"
-          target="_blank"
-          :href="getReportURL(`pdf/classes/${klass.id}/subjects`)"
-          ><i class="bx bx-download mr-1"></i><b>Subject List</b>
-        </a>
-        <AddSubject :klass="klass" :teachers="teachers"></AddSubject>
+        <d-row class="ml-1">
+          <a
+            class="btn btn-success mr-2 mb-2 btn-sm"
+            target="_blank"
+            :href="getReportURL(`pdf/classes/${klass.id}/subjects`)"
+            ><i class="bx bx-download mr-1"></i><b>Subject List</b>
+          </a>
+          <AddSubject :klass="klass" :teachers="teachers"></AddSubject>
+        </d-row>
         <div class="card card-small mb-4 mt-2">
           <div class="card-body p-0 pb-3 text-center">
             <table class="table mb-0">
@@ -138,7 +140,7 @@
                       class="mr-2"
                       @click="
                         () => {
-                          selectedpupilfordeassign = pupil.user
+                          selectedpupilfordeassign = pupil
                           deassignPupilModal = true
                         }
                       "
@@ -260,11 +262,10 @@
         </div>
       </d-modal-body>
       <d-modal-footer>
-        <d-button theme="success" outline><b>Yes</b></d-button>
-        <d-button
-          theme="danger"
-          outline
-          @click="subjectDeleteAssurityModal = false"
+        <d-button theme="success" outline @click="deassignUser"
+          ><b>Yes</b></d-button
+        >
+        <d-button theme="danger" outline @click="deassignPupilModal = false"
           >No</d-button
         >
       </d-modal-footer>
@@ -375,6 +376,20 @@ export default {
         .delete(`/delete/subjects/${this.selectedSubjectForDelete.id}`)
         .then((res) => {
           this.subjectDeleteAssurityModal = false
+          this.fetchClassById()
+          this.fetchUsers()
+        })
+    },
+    deassignUser() {
+      this.klass_id = this.$route.params.klass_id
+      this.$axios
+        .put(
+          `deassign/classes/${this.klass_id}/user/${this.selectedpupilfordeassign.user.id}`
+        )
+        .then((res) => {
+          this.deassignPupilModal = false
+          this.klass_id = this.$route.params.klass_id
+          this.selectedpupilfordeassign = null
           this.fetchClassById()
           this.fetchUsers()
         })

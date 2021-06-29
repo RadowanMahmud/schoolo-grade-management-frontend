@@ -98,7 +98,12 @@
               </thead>
               <tbody>
                 <tr v-for="pupil in subject.subjectpupils" :key="pupil.id">
-                  <td>{{ pupil.user.username }}</td>
+                  <td>
+                    {{ pupil.user.username }}
+                    <d-badge v-if="pupil.deassign === 1" theme="warning"
+                      >Archived</d-badge
+                    >
+                  </td>
                   <td>{{ pupil.user.forename }}</td>
                   <td>{{ pupil.user.surname }}</td>
                   <td>

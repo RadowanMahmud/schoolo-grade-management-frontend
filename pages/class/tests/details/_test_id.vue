@@ -49,12 +49,15 @@
           </thead>
           <tbody>
             <tr v-for="(testpupil, idx) in test.testpupils" :key="idx">
-              <td>{{ testpupil.user.username }}</td>
+              <td>
+                {{ testpupil.user.username }}
+              </td>
               <td>{{ testpupil.user.forename }}</td>
               <td>{{ testpupil.user.surname }}</td>
               <td>{{ testpupil.grade }}</td>
               <td v-if="subject.type === 0" style="align-content: center">
                 <d-button
+                  v-if="testpupil.deassign === 0"
                   size="sm"
                   theme="info"
                   class="mr-2"
@@ -65,6 +68,9 @@
                     }
                   "
                   ><i class="bx bx-edit"></i> <b> Edit</b></d-button
+                >
+                <d-badge v-if="testpupil.deassign === 1" theme="warning"
+                  >Archived</d-badge
                 >
               </td>
             </tr>
