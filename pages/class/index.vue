@@ -6,10 +6,10 @@
     <!-- Page Header -->
     <div class="page-header row no-gutters py-4">
       <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-        <span class="text-uppercase page-subtitle"
+        <span class="text-uppercase page-subtitle text-dark"
           >List of All the Classes</span
         >
-        <h3 class="page-title">Class List</h3>
+        <h3 class="page-title text-dark">Class List</h3>
       </div>
     </div>
 
@@ -22,7 +22,6 @@
       </a>
       <d-button
         v-if="this.$hasPermission('createClass')"
-        outline
         size="sm"
         theme="success"
         @click="classAddModal = true"

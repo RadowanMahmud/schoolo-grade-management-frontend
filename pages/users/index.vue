@@ -6,21 +6,22 @@
     <!-- Page Header -->
     <div class="page-header row no-gutters py-4">
       <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-        <span class="text-uppercase page-subtitle">List of All the Users</span>
-        <h3 class="page-title">Users List</h3>
+        <span class="text-uppercase page-subtitle text-dark"
+          >List of All the Users</span
+        >
+        <h3 class="page-title text-dark">Users List</h3>
       </div>
     </div>
 
     <d-row align-h="end" class="mx-auto">
       <a
-        class="btn btn-info mr-2 mb-2 btn-sm"
+        class="btn btn-info mr-2 btn-sm"
         target="_blank"
         :href="getReportURL(`pdf/users/all`)"
         ><i class="bx bx-download mr-1"></i><b>Download User List</b>
       </a>
       <d-button
         v-if="this.$hasPermission('CreateUser')"
-        outline
         size="sm"
         theme="success"
         @click="userAddModal = true"

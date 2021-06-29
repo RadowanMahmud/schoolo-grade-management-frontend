@@ -1,5 +1,5 @@
 <template>
-  <d-container fluid>
+  <d-container fluid class="bg">
     <d-row>
       <!-- Main Sidebar -->
       <LayoutMainSidebar :items="sidebarItems" />
@@ -20,7 +20,7 @@
         </div>
 
         <!-- Main Footer -->
-        <LayoutMainFooter />
+        <!--        <LayoutMainFooter />-->
       </d-col>
     </d-row>
   </d-container>
@@ -29,9 +29,9 @@
 import getSidebarItems from '@/assets/data/sidebar-nav-items'
 import LayoutMainSidebar from '~/components/layout/MainSidebar/LayoutMainSidebar'
 // import LayoutMainNavbar from '~/components/layout/MainNavbar/LayoutMainNavbar'
-import LayoutMainFooter from '~/components/layout/MainFooter/LayoutMainFooter'
+// import LayoutMainFooter from '~/components/layout/MainFooter/LayoutMainFooter'
 export default {
-  components: { LayoutMainFooter, LayoutMainSidebar },
+  components: { LayoutMainSidebar },
   data() {
     return {
       sidebarItems: getSidebarItems(),
@@ -41,4 +41,20 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.bg {
+  /* The image used */
+  background-image: url('assets/images/21565068.jpg');
+
+  /* Full height */
+  height: 100vh;
+
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  opacity: 0.85;
+  z-index: -1;
+}
+</style>
