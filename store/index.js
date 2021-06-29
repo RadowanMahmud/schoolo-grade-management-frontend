@@ -18,4 +18,10 @@ export const mutations = {
       ? localStorage.setItem('user', JSON.stringify(user))
       : localStorage.removeItem('user')
   },
+  getNewMessage(state) {
+    console.log('hello')
+    this.$axios.get(`/users/${state.id}/messages/new`).then((response) => {
+      console.log('new  =', response.data)
+    })
+  },
 }

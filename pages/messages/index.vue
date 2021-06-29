@@ -55,7 +55,7 @@
             <div class="row pb-2 ml-2">
               <span class="my-auto mr-2"><b> Message: </b></span>
               <d-form-textarea
-                v-model="messageForm.msg_body"
+                v-model="messageForm.message"
                 placeholder="Write message here..."
                 required
                 rows="3"
@@ -65,7 +65,7 @@
             <div class="row pb-2 ml-2">
               <span class="my-auto mr-2"><b> Select Receiver: </b></span>
               <d-form-select
-                v-model="messageForm.receiver"
+                v-model="messageForm.receiver_id"
                 :options="personal_receiver_list"
                 required
               ></d-form-select>
@@ -74,7 +74,7 @@
             <div class="row pb-2 ml-2">
               <d-button
                 type="submit"
-                :disabled="messageForm.msg_body.length === 0"
+                :disabled="messageForm.message.length === 0"
                 >Send</d-button
               >
             </div>
@@ -95,10 +95,10 @@
 <script>
 import { mapGetters } from 'vuex'
 const messageFormTemplate = {
-  sender: '',
-  receiver: '',
-  msg_body: '',
-  time: '',
+  sender_id: '',
+  receiver_id: '',
+  message: '',
+  message_time: '',
   type: '',
 }
 export default {
@@ -120,25 +120,25 @@ export default {
     console.log(this.getUser)
     this.fetchPersonalRecipients()
     this.fetchGrpRecipient()
+
+    this.getNewMsges()
   },
   methods: {
+    getNewMsges() {
+      this.$axios
+        .get(`/users/${this.getUser.id}/messages/new`)
+        .then((response) => {
+          console.log('new  =', response.data)
+        })
+    },
     fetchPersonalRecipients() {
       this.$axios
         .get(`users/${this.getUser.id}/messages/receivers`)
         .then((response) => {
-          // response.data.forEach((data) => {
-          //   //   console.log(data.user)
-          //   this.personal_receiver_list.push({
-          //     value: data.id,
-          //     text: data.user.username,
-          //   })
-          // })
-
-          // const mySet1 = new Set()
           response.data.forEach((data) => {
             if (data.user.id !== this.getUser.id) {
               this.personal_receiver_list.push({
-                value: data.id,
+                value: data.user.id,
                 text: data.user.username,
               })
             }
@@ -158,9 +158,9 @@ export default {
 
     sendMessage() {
       console.log(this.messageForm)
-      this.messageForm.time = new Date()
+      this.messageForm.message_time = new Date()
       this.messageForm.type = 0
-      this.messageForm.sender = this.getUser.id
+      this.messageForm.sender_id = this.getUser.id
 
       this.$axios.post('/messages', this.messageForm).then((res) => {
         this.messageForm = { ...messageFormTemplate }
