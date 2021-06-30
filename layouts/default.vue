@@ -27,6 +27,7 @@
 </template>
 <script>
 import getSidebarItems from '@/assets/data/sidebar-nav-items'
+import { mapGetters, mapMutations } from 'vuex'
 import LayoutMainSidebar from '~/components/layout/MainSidebar/LayoutMainSidebar'
 // import LayoutMainNavbar from '~/components/layout/MainNavbar/LayoutMainNavbar'
 // import LayoutMainFooter from '~/components/layout/MainFooter/LayoutMainFooter'
@@ -35,9 +36,22 @@ export default {
   data() {
     return {
       sidebarItems: getSidebarItems(),
+      interval: null,
+      tempGetUser: null,
     }
   },
-  methods: {},
+  computed: {
+    ...mapGetters(['getUser']),
+  },
+  mounted() {
+    // console.log(this.getUser.id)
+    this.tempGetUser = this.getUser.id
+    // this.lol()
+  },
+
+  methods: {
+    ...mapMutations(['testFunction']),
+  },
 }
 </script>
 

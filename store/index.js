@@ -3,10 +3,13 @@ export const state = () => ({
     ? JSON.parse(localStorage.getItem('user'))
     : null,
   isActionRunning: false,
+  messageInterval: null,
+  newMessage: null,
 })
 
 export const getters = {
   getUser: (state) => state.user,
+  getNewMessages: (state) => state.newMessage,
 }
 export const mutations = {
   changeActionRunningState(state, status) {
@@ -17,5 +20,11 @@ export const mutations = {
     user
       ? localStorage.setItem('user', JSON.stringify(user))
       : localStorage.removeItem('user')
+  },
+  addMessage(state, data) {
+    state.newMessage = data
+  },
+  testFunction(state, data) {
+    state.newMessage = [...data]
   },
 }

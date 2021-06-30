@@ -14,7 +14,8 @@
     <d-row align-h="start" class="mx-auto">
       <d-col cols="7">
         <h5 class="page-title">Subject List</h5>
-        <d-row class="ml-1">
+
+        <d-row v-if="$hasPermission('justAdmin')" class="ml-1">
           <a
             class="btn btn-success mr-2 btn-sm"
             target="_blank"
@@ -70,7 +71,7 @@
                     <!--                      ><i class="bx bx-show"></i> <b>Grades</b></d-button-->
                     <!--                    >-->
                     <d-button
-                      v-if="sub.type === 0"
+                      v-if="sub.type === 0 && $hasPermission('justAdmin')"
                       size="sm"
                       theme="info"
                       class="mr-2"
@@ -83,7 +84,11 @@
                       ><i class="bx bx-edit"></i> <b>Edit</b></d-button
                     >
                     <d-button
-                      v-if="sub.type === 0 && sub.tests.length > 0"
+                      v-if="
+                        sub.type === 0 &&
+                        sub.tests.length > 0 &&
+                        $hasPermission('justAdmin')
+                      "
                       size="sm"
                       theme="warning"
                       class="mr-2"
@@ -96,7 +101,11 @@
                       ><i class="bx bx-folder"></i> <b>Archive</b></d-button
                     >
                     <d-button
-                      v-if="sub.type === 0 && sub.tests.length <= 0"
+                      v-if="
+                        sub.type === 0 &&
+                        sub.tests.length <= 0 &&
+                        $hasPermission('justAdmin')
+                      "
                       size="sm"
                       theme="danger"
                       class="mr-2"
@@ -117,7 +126,11 @@
       </d-col>
       <d-col>
         <h5 class="page-title text-dark">Pupil List</h5>
-        <AddPupil :klass="klass" :pupils="pupils"></AddPupil>
+        <AddPupil
+          v-if="$hasPermission('justAdmin')"
+          :klass="klass"
+          :pupils="pupils"
+        ></AddPupil>
         <div class="card card-small mb-4 mt-2">
           <div class="card-body p-0 pb-3 text-center">
             <table class="table mb-0">
@@ -126,7 +139,13 @@
                   <th scope="col" class="border-0">User Name</th>
                   <th scope="col" class="border-0">Fore Name</th>
                   <th scope="col" class="border-0">Sur Name</th>
-                  <th scope="col" class="border-0">Actions</th>
+                  <th
+                    v-if="$hasPermission('justAdmin')"
+                    scope="col"
+                    class="border-0"
+                  >
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -134,7 +153,11 @@
                   <td>{{ pupil.user.username }}</td>
                   <td>{{ pupil.user.forename }}</td>
                   <td>{{ pupil.user.surname }}</td>
-                  <td style="align-content: center">
+
+                  <td
+                    v-if="$hasPermission('justAdmin')"
+                    style="align-content: center"
+                  >
                     <d-button
                       size="sm"
                       theme="danger"
@@ -276,8 +299,10 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import AddSubject from '~/components/class/AddSubject'
 import AddPupil from '~/components/class/AddPupil'
+
 const subjectEditFormTenmplate = {
   id: '',
   name: '',
@@ -311,6 +336,9 @@ export default {
       selectedpupilfordeassign: null,
     }
   },
+  computed: {
+    ...mapGetters(['getUser']),
+  },
   mounted() {
     this.klass_id = this.$route.params.klass_id
     this.fetchClassById()
@@ -322,6 +350,9 @@ export default {
     fetchClassById() {
       this.$axios.get(`classes/${this.klass_id}`).then((res) => {
         this.klass = res.data
+        if (this.getUser.roles[0].name === 'teacher') {
+          this.forTeacherOnly()
+        }
       })
     },
     fetchUsers() {
@@ -338,13 +369,17 @@ export default {
         }
       })
     },
+    forTeacherOnly() {
+      this.klass.subjects = this.klass.subjects.filter((sub) => {
+        return sub.teacher_id === this.getUser.id
+      })
+    },
     getTeacherName(id) {
       for (let i = 0; i < this.teachers.length; i++) {
         if (id === this.teachers[i].id) {
           return this.teachers[i].username
         }
       }
-
       return 'null'
     },
     updateSubject() {

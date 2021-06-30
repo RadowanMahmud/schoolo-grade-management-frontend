@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="$hasPermission('modifyTests') && subject && tests"
+    v-if="subject && tests"
     class="main-content-container container-fluid px-4"
   >
     <div class="page-header row no-gutters py-4">
@@ -15,7 +15,10 @@
     <d-row>
       <d-col cols="7">
         <h5 class="page-title text-dark">Test List</h5>
-        <AddTest v-if="subject.type === 0" :subject-id="subject_id"></AddTest>
+        <AddTest
+          v-if="subject.type === 0 && $hasPermission('justTeacher')"
+          :subject-id="subject_id"
+        ></AddTest>
         <div class="card card-small mb-4 mt-2">
           <div class="card-body p-0 pb-3 text-center">
             <table class="table mb-0">
@@ -44,7 +47,7 @@
                       ><i class="bx bx-show"></i> <b> Test Details</b></d-button
                     >
                     <d-button
-                      v-if="subject.type === 0"
+                      v-if="subject.type === 0 && $hasPermission('justTeacher')"
                       size="sm"
                       theme="info"
                       class="mr-2"
@@ -57,7 +60,7 @@
                       ><i class="bx bx-edit"></i> <b> Edit </b></d-button
                     >
                     <d-button
-                      v-if="subject.type === 0"
+                      v-if="subject.type === 0 && $hasPermission('justTeacher')"
                       size="sm"
                       theme="danger"
                       outline
@@ -232,7 +235,6 @@ export default {
       this.testEditForm.name = this.selectedTestForEdit.name
       this.testEditForm.subject_id = this.subject_id
       this.testEditForm.test_date = this.selectedTestForEdit.test_date
-
       this.$axios.put('tests', this.testEditForm).then((res) => {
         if (res.status === 201) {
           this.testEditForm = { ...testEditFormTemplate }

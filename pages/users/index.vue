@@ -322,15 +322,20 @@ export default {
           this.users = temp.filter((u) => u.roles[0].name !== 'super_admin')
           this.perPage = response.data.per_page
           this.totalRows = response.data.total
+          // this.users.forEach((data) => {
+          //   console.log(
+          //     `username = ${data.username}, role=${data.roles[0].name}, id=${data.id}`
+          //   )
+          // })
         })
     },
     addUser() {
       this.$axios.post('users', this.userCreateForm).then((res) => {
-        if (res.status === 201) {
-          this.userAddModal = false
-          this.fetchUsers()
-          this.userCreateForm = { ...userCreateFormTemplate }
-        }
+        //  if (res.status === 201) {
+        this.userAddModal = false
+        this.fetchUsers()
+        this.userCreateForm = { ...userCreateFormTemplate }
+        //  }
       })
     },
     updateUser() {
@@ -339,7 +344,6 @@ export default {
       this.userEditForm.username = this.selectedUserForEdit.username
       this.userEditForm.forename = this.selectedUserForEdit.forename
       this.userEditForm.surname = this.selectedUserForEdit.surname
-
       this.$axios
         .put('users', this.userEditForm)
         .then((res) => {

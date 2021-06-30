@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="$hasPermission('modifyTests') && subject !== null"
+    v-if="subject !== null"
     class="main-content-container container-fluid px-4"
   >
     <div class="page-header row no-gutters py-4">
@@ -23,13 +23,13 @@
         ><i class="bx bx-download mr-1"></i><b>Test Details</b>
       </a>
       <AddTestPupil
-        v-if="subject.type === 0"
+        v-if="subject.type === 0 && $hasPermission('modifyTests')"
         :subject-id="test.subject_id"
         :test-id="test_id"
         :user-list="arrayOfEmptyPupils"
       ></AddTestPupil>
       <UpoladCSV
-        v-if="subject.type === 0"
+        v-if="subject.type === 0 && $hasPermission('modifyTests')"
         :subject-id="test.subject_id"
         :test-id="test_id"
         :user-list="classPupils"
@@ -44,7 +44,11 @@
               <th scope="col" class="border-0">Fore Name</th>
               <th scope="col" class="border-0">Sur Name</th>
               <th scope="col" class="border-0">Grade</th>
-              <th v-if="subject.type === 0" scope="col" class="border-0">
+              <th
+                v-if="subject.type === 0 && $hasPermission('modifyTests')"
+                scope="col"
+                class="border-0"
+              >
                 Actions
               </th>
             </tr>
@@ -57,7 +61,11 @@
               <td>{{ testpupil.user.forename }}</td>
               <td>{{ testpupil.user.surname }}</td>
               <td>{{ testpupil.grade }}</td>
-              <td v-if="subject.type === 0" style="align-content: center">
+
+              <td
+                v-if="subject.type === 0 && $hasPermission('modifyTests')"
+                style="align-content: center"
+              >
                 <d-button
                   v-if="testpupil.deassign === 0"
                   size="sm"
