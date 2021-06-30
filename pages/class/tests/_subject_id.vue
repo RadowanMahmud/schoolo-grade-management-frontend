@@ -5,14 +5,16 @@
   >
     <div class="page-header row no-gutters py-4">
       <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-        <span class="text-uppercase page-subtitle">Test List For</span>
-        <h3 class="page-title">{{ subject.name }}</h3>
+        <span class="text-uppercase page-subtitle text-dark"
+          >Test List For</span
+        >
+        <h3 class="page-title text-dark">{{ subject.name }}</h3>
         <d-badge v-if="subject.type === 1" theme="warning">Archived</d-badge>
       </div>
     </div>
     <d-row>
       <d-col cols="7">
-        <h5 class="page-title">Test List</h5>
+        <h5 class="page-title text-dark">Test List</h5>
         <AddTest
           v-if="subject.type === 0 && $hasPermission('justTeacher')"
           :subject-id="subject_id"
@@ -79,7 +81,7 @@
         </div>
       </d-col>
       <d-col>
-        <h5 class="page-title">Subject Pupil List</h5>
+        <h5 class="page-title text-dark">Subject Pupil List</h5>
         <d-row align-h="end" class="mx-auto">
           <a
             class="btn btn-info mr-2 mb-2 btn-sm"

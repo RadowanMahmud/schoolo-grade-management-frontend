@@ -13,12 +13,19 @@
 
       <d-row align-h="end" class="mx-auto">
         <d-button
-          outline
-          size="md"
+          class="btn btn-primary mr-2 btn-md"
+          theme="success"
+          @click="show_grp_msg_dialog = true"
+        >
+          <i class="bx bx-chat mr-2"></i> Send Group Message
+        </d-button>
+
+        <d-button
+          class="btn btn-primary mr-2 btn-md"
           theme="success"
           @click="show_msg_dialog = true"
         >
-          <i class="bx bx-chat mr-2"></i> Send Message
+          <i class="bx bx-chat mr-2"></i> Send Personal Message
         </d-button>
       </d-row>
       <div class="card card-small mb-4 mt-2">
@@ -32,13 +39,48 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="msg in new_msg_list" :key="msg.sender">
-                <td>{{ msg.sender }}</td>
+              <tr v-for="msg in new_msg_list" :key="msg.id">
                 <td>
-                  {{ msg.msg_body }}
+                  {{ msg.type === 0 ? msg.person_name : msg.subject_name }}
                 </td>
                 <td>
-                  {{ msg.time.toString().substr(0, 25) }}
+                  {{ msg.message }}
+                </td>
+                <td>
+                  {{ msg.message_time }}
+
+                  <!-- {{msg.message_time.toLocaleString('en-GB', { hour12: true }) }}-->
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div align-h="end" class="col-12 text-md-left mb-0">
+        <h3>Previous Messages For User</h3>
+      </div>
+
+      <div class="card card-small mb-4 mt-2">
+        <div class="card-body p-0 pb-3">
+          <table class="table mb-0">
+            <thead class="bg-light">
+              <tr>
+                <th scope="col" class="border-0">Sender</th>
+                <th scope="col" class="border-0">Message</th>
+                <th scope="col" class="border-0">Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="msg in old_msg_list" :key="msg.sender">
+                <td>
+                  {{ msg.type === 0 ? msg.person_name : msg.subject_name }}
+                </td>
+                <td>
+                  {{ msg.message }}
+                </td>
+                <td>
+                  {{ msg.message_time }}
                 </td>
               </tr>
             </tbody>
@@ -81,6 +123,41 @@
           </d-form>
         </d-modal-body>
       </d-modal>
+      <d-modal v-if="show_grp_msg_dialog" @close="show_grp_msg_dialog = false">
+        <d-modal-header>
+          <d-modal-title>Send Group Message</d-modal-title>
+        </d-modal-header>
+        <d-modal-body>
+          <d-form @submit.prevent="sendGroupMessage">
+            <div class="row pb-2 ml-2">
+              <span class="my-auto mr-2"><b> Message: </b></span>
+              <d-form-textarea
+                v-model="messageForm.message"
+                placeholder="Write message here..."
+                required
+                rows="3"
+                max-rows="8"
+              />
+            </div>
+            <div class="row pb-2 ml-2">
+              <span class="my-auto mr-2"><b> Select Class: </b></span>
+              <d-form-select
+                v-model="messageForm.receiver_id"
+                :options="grp_receicer_list"
+                required
+              ></d-form-select>
+            </div>
+
+            <div class="row pb-2 ml-2">
+              <d-button
+                type="submit"
+                :disabled="messageForm.message.length === 0"
+                >Send</d-button
+              >
+            </div>
+          </d-form>
+        </d-modal-body>
+      </d-modal>
     </div>
     <div v-else>
       <div class="page-header row no-gutters py-4">
@@ -107,28 +184,31 @@ export default {
     return {
       messageForm: { ...messageFormTemplate },
       show_msg_dialog: false,
-      receiver_options: ['one', 'two', 'three', 'four'],
+      show_grp_msg_dialog: false,
+      old_msg_list: [],
       new_msg_list: [],
       grp_receicer_list: [],
       personal_receiver_list: [],
     }
   },
   computed: {
-    ...mapGetters(['getUser']),
+    ...mapGetters(['getUser', 'getNewMessages']),
   },
   mounted() {
-    console.log(this.getUser)
     this.fetchPersonalRecipients()
     this.fetchGrpRecipient()
 
-    this.getNewMsges()
+    this.getOldMessages()
+    this.new_msg_list =
+      this.getNewMessages !== null ? [...this.getNewMessages] : []
   },
   methods: {
-    getNewMsges() {
+    getOldMessages() {
       this.$axios
-        .get(`/users/${this.getUser.id}/messages/new`)
+        .get(`/users/${this.getUser.id}/messages/old`)
         .then((response) => {
-          console.log('new  =', response.data)
+          //  console.log('new  =', response.data)
+          this.old_msg_list = response.data
         })
     },
     fetchPersonalRecipients() {
@@ -157,7 +237,6 @@ export default {
     },
 
     sendMessage() {
-      console.log(this.messageForm)
       this.messageForm.message_time = new Date()
       this.messageForm.type = 0
       this.messageForm.sender_id = this.getUser.id
@@ -167,6 +246,18 @@ export default {
       })
 
       this.show_msg_dialog = false
+      console.log('sended')
+    },
+    sendGroupMessage() {
+      console.log('receiver = ', this.messageForm.receiver_id)
+      this.messageForm.message_time = new Date()
+      this.messageForm.type = 1
+      this.messageForm.sender_id = this.getUser.id
+      this.$axios.post('/messages', this.messageForm).then((res) => {
+        this.messageForm = { ...messageFormTemplate }
+      })
+
+      this.show_grp_msg_dialog = false
       console.log('sended')
     },
   },

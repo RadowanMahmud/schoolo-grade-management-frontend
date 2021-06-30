@@ -5,9 +5,11 @@
   >
     <div class="page-header row no-gutters py-4">
       <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-        <span class="text-uppercase page-subtitle">Pupil List For</span>
-        <h3 class="page-title">{{ test.name }}</h3>
-        <h5 class="page-title">
+        <span class="text-uppercase page-subtitle text-dark"
+          >Pupil List For</span
+        >
+        <h3 class="page-title text-dark">{{ test.name }}</h3>
+        <h5 class="page-title text-dark">
           {{ $moment(test.test_date).format('DD-MM-YYYY') }}
         </h5>
         <d-badge v-if="subject.type === 1" theme="warning">Archived</d-badge>

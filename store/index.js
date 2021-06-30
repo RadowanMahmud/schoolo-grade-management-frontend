@@ -3,10 +3,13 @@ export const state = () => ({
     ? JSON.parse(localStorage.getItem('user'))
     : null,
   isActionRunning: false,
+  messageInterval: null,
+  newMessage: null,
 })
 
 export const getters = {
   getUser: (state) => state.user,
+  getNewMessages: (state) => state.newMessage,
 }
 export const mutations = {
   changeActionRunningState(state, status) {
@@ -18,10 +21,12 @@ export const mutations = {
       ? localStorage.setItem('user', JSON.stringify(user))
       : localStorage.removeItem('user')
   },
-  getNewMessage(state) {
-    console.log('hello')
-    this.$axios.get(`/users/${state.id}/messages/new`).then((response) => {
-      console.log('new  =', response.data)
-    })
+  addMessage(state, data) {
+    console.log('in mut')
+    state.newMessage = data
+  },
+  testFunction(state, data) {
+    console.log('data in mutation = ', data)
+    state.newMessage = [...data]
   },
 }

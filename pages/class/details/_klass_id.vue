@@ -5,8 +5,10 @@
   >
     <div class="page-header row no-gutters py-4">
       <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-        <span class="text-uppercase page-subtitle">Details for class</span>
-        <h3 class="page-title">{{ klass.name }}</h3>
+        <span class="text-uppercase page-subtitle text-dark"
+          >Details for class</span
+        >
+        <h3 class="page-title text-dark">{{ klass.name }}</h3>
       </div>
     </div>
     <d-row align-h="start" class="mx-auto">
@@ -15,10 +17,10 @@
 
         <d-row v-if="$hasPermission('justAdmin')" class="ml-1">
           <a
-            class="btn btn-success mr-2 mb-2 btn-sm"
+            class="btn btn-success mr-2 btn-sm"
             target="_blank"
             :href="getReportURL(`pdf/classes/${klass.id}/subjects`)"
-            ><i class="bx bx-download mr-1"></i><b>Subject List</b>
+            ><i class="bx bx-download mr-1 text-dark"></i><b>Subject List</b>
           </a>
           <AddSubject :klass="klass" :teachers="teachers"></AddSubject>
         </d-row>
@@ -123,11 +125,12 @@
         </div>
       </d-col>
       <d-col>
-        <h5 class="page-title">Pupil List</h5>
-        <div v-if="$hasPermission('justAdmin')">
-          <AddPupil :klass="klass" :pupils="pupils"></AddPupil>
-        </div>
-
+        <h5 class="page-title text-dark">Pupil List</h5>
+        <AddPupil
+          v-if="$hasPermission('justAdmin')"
+          :klass="klass"
+          :pupils="pupils"
+        ></AddPupil>
         <div class="card card-small mb-4 mt-2">
           <div class="card-body p-0 pb-3 text-center">
             <table class="table mb-0">

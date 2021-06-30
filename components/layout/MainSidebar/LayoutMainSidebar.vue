@@ -111,13 +111,26 @@
             <span>Logout</span>
           </div>
         </li>
+        <li class="nav-item dropdown">
+          <div style="cursor: pointer">
+            <d-alert
+              dismissible
+              :show="timeUntilDismissed"
+              theme="info"
+              @alert-dismissed="timeUntilDismissed = 0"
+              @alert-dismiss-countdown="handleTimeChange"
+            >
+              <b>New Message</b>
+            </d-alert>
+          </div>
+        </li>
       </d-nav>
     </div>
   </aside>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 export default {
   props: {
     /**
@@ -138,22 +151,52 @@ export default {
   data() {
     return {
       sidebarVisible: false,
+      interval: null,
+      duration: 3,
+      timeUntilDismissed: 0,
     }
   },
   created() {
     this.$nuxt.$on('toggle-sidebar', this.handleToggleSidebar)
   },
   beforeDestroy() {
+    clearInterval(this.interval)
     this.$nuxt.$on('toggle-sidebar')
   },
+  computed: {
+    ...mapGetters(['getUser']),
+  },
+  mounted() {
+    this.msgSchedular()
+  },
   methods: {
-    ...mapMutations(['storeUser']),
+    ...mapMutations(['storeUser', 'testFunction']),
     logout() {
+      clearInterval(this.interval)
+      this.$router.replace({ name: 'login' })
       this.storeUser(null)
-      this.$router.push({ name: 'login' })
     },
     handleToggleSidebar() {
       this.sidebarVisible = !this.sidebarVisible
+    },
+    msgSchedular() {
+      this.interval = setInterval(() => {
+        this.$axios
+          .get(`/users/${this.getUser.id}/messages/new`)
+          .then((response) => {
+            console.log(response.data)
+            if (response.data.length !== 0) {
+              console.log('new message arrived')
+              this.testFunction(response.data)
+              this.timeUntilDismissed = this.duration
+            } else {
+              console.log('no new message')
+            }
+          })
+      }, 10 * 1000)
+    },
+    handleTimeChange(time) {
+      this.timeUntilDismissed = time
     },
   },
 }

@@ -3,7 +3,7 @@
     <d-row align-h="end" class="mx-auto">
       <d-button
         v-if="this.$hasPermission('modifyTests')"
-        outline
+        class="text-dark"
         size="sm"
         theme="success"
         @click="testAddModal = true"

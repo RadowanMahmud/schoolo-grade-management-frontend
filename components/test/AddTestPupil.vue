@@ -3,12 +3,12 @@
     <d-row align-h="end" class="mx-auto">
       <d-button
         v-if="this.$hasPermission('modifyTests')"
-        outline
+        class="text-dark"
         size="sm"
         theme="success"
         @click="testpupilAddmodal = true"
       >
-        <i class="bx bx-plus mr-2"></i> Add Pupil
+        <i class="bx bx-plus mr-2"></i> <b> Add Pupil</b>
       </d-button>
     </d-row>
     <d-modal v-if="testpupilAddmodal" @close="testpupilAddmodal = false">

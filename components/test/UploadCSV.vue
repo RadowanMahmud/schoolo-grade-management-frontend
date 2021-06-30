@@ -3,12 +3,12 @@
     <d-row align-h="end" class="mx-auto">
       <d-button
         v-if="this.$hasPermission('modifyTests')"
-        outline
+        class="ml-2 text-dark"
         size="sm"
         theme="success"
         @click="uploadCsvModal = true"
       >
-        <i class="bx bx-plus mr-2"></i> Upload CSV
+        <i class="bx bx-plus mr-2"></i> <b>Upload CSV</b>
       </d-button>
     </d-row>
     <d-modal v-if="uploadCsvModal" @close="uploadCsvModal = false">
