@@ -193,7 +193,7 @@ export default {
             if (response.data.length !== 0) {
               console.log('new message arrived')
               this.testFunction(response.data)
-              this.msg_count = response.data.length
+              this.msg_count += response.data.length
               this.timeUntilDismissed = this.duration
             } else {
               console.log('no new message')

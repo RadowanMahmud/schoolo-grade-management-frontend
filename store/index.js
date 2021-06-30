@@ -22,11 +22,9 @@ export const mutations = {
       : localStorage.removeItem('user')
   },
   addMessage(state, data) {
-    console.log('in mut')
     state.newMessage = data
   },
   testFunction(state, data) {
-    console.log('data in mutation = ', data)
     state.newMessage = [...data]
   },
 }

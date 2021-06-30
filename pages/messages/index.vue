@@ -191,6 +191,7 @@ export default {
       new_msg_list: [],
       grp_receicer_list: [],
       personal_receiver_list: [],
+      dataMergeInterval: null,
     }
   },
   computed: {
@@ -201,10 +202,18 @@ export default {
     this.fetchGrpRecipient()
 
     this.getOldMessages()
-    this.new_msg_list =
-      this.getNewMessages !== null ? [...this.getNewMessages] : []
+    this.changeNewMsg()
+  },
+  destroyed() {
+    clearInterval(this.dataMergeInterval)
   },
   methods: {
+    changeNewMsg() {
+      this.dataMergeInterval = setInterval(() => {
+        this.new_msg_list =
+          this.getNewMessages !== null ? [...this.getNewMessages] : []
+      }, 2 * 1000)
+    },
     getOldMessages() {
       this.$axios
         .get(`/users/${this.getUser.id}/messages/old`)
