@@ -63,7 +63,11 @@
               class="item-icon-wrapper"
               v-html="item.htmlBefore"
             />
-            <span v-if="item.title">{{ item.title }}</span>
+
+            <span v-if="item.title && item.title === 'Message'"
+              >{{ item.title }} ({{ msg_count }})</span
+            >
+            <span v-else-if="item.title">{{ item.title }}</span>
             <div
               v-if="item.htmlAfter"
               class="item-icon-wrapper"
@@ -152,8 +156,9 @@ export default {
     return {
       sidebarVisible: false,
       interval: null,
-      duration: 3,
+      duration: 15,
       timeUntilDismissed: 0,
+      msg_count: 0,
     }
   },
   created() {
@@ -188,6 +193,7 @@ export default {
             if (response.data.length !== 0) {
               console.log('new message arrived')
               this.testFunction(response.data)
+              this.msg_count = response.data.length
               this.timeUntilDismissed = this.duration
             } else {
               console.log('no new message')

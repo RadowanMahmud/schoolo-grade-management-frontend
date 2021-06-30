@@ -47,9 +47,9 @@
                   {{ msg.message }}
                 </td>
                 <td>
-                  {{ msg.message_time }}
-
-                  <!-- {{msg.message_time.toLocaleString('en-GB', { hour12: true }) }}-->
+                  {{
+                    $moment(msg.message_time).format('MMMM DD, YYYY hh:mm A')
+                  }}
                 </td>
               </tr>
             </tbody>
@@ -57,8 +57,8 @@
         </div>
       </div>
 
-      <div align-h="end" class="col-12 text-md-left mb-0">
-        <h3>Previous Messages For User</h3>
+      <div align-h="end" class="col-12 text-md-left mb-0 text-blue">
+        <h3 style="color: palevioletred">Previous Messages For User</h3>
       </div>
 
       <div class="card card-small mb-4 mt-2">
@@ -80,7 +80,9 @@
                   {{ msg.message }}
                 </td>
                 <td>
-                  {{ msg.message_time }}
+                  {{
+                    $moment(msg.message_time).format('MMMM DD, YYYY hh:mm A')
+                  }}
                 </td>
               </tr>
             </tbody>
@@ -140,7 +142,7 @@
               />
             </div>
             <div class="row pb-2 ml-2">
-              <span class="my-auto mr-2"><b> Select Class: </b></span>
+              <span class="my-auto mr-2"><b> Select Subject: </b></span>
               <d-form-select
                 v-model="messageForm.receiver_id"
                 :options="grp_receicer_list"
