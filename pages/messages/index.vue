@@ -212,7 +212,7 @@ export default {
       this.dataMergeInterval = setInterval(() => {
         this.new_msg_list =
           this.getNewMessages !== null ? [...this.getNewMessages] : []
-      }, 2 * 1000)
+      }, 600)
     },
     getOldMessages() {
       this.$axios
