@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="subject && tests"
+    v-if="subject && test_result_list"
     class="main-content-container container-fluid px-4"
   >
     <div class="page-header row no-gutters py-4">
@@ -219,7 +219,7 @@ export default {
     return {
       subject: null,
       subject_id: '',
-      tests: [],
+
       testEditModal: false,
       selectedTestForEdit: null,
       testEditForm: { ...testEditFormTemplate },
@@ -236,24 +236,31 @@ export default {
     this.subject_id = this.$route.params.subject_id
     this.$root.$on('test-added', this.fetchTests)
     this.fetchSubjectById()
-    this.fetchTestResult()
+    this.fetchTests()
   },
   methods: {
-    fetchTestResult() {
-      this.$axios.get(`/tests/users/${this.getUser.id}`).then((res) => {
-        const tempArr = res.data.filter((u) => u.subject_id === this.subject_id)
-        tempArr.forEach((doc) => {
-          let temp = 0
-          doc.testpupils.forEach((pupil) => {
-            if (pupil.user_id === this.getUser.id) {
-              temp = pupil.grade
-            }
+    fetchTests() {
+      if (this.getUser.roles[0].name === 'pupil') {
+        this.$axios.get(`/tests/users/${this.getUser.id}`).then((res) => {
+          const tempArr = res.data.filter(
+            (u) => u.subject_id === this.subject_id
+          )
+          tempArr.forEach((doc) => {
+            let temp = 0
+            doc.testpupils.forEach((pupil) => {
+              if (pupil.user_id === this.getUser.id) {
+                temp = pupil.grade
+              }
+            })
+            this.test_result_list.push({ ...doc, GRADE: temp })
           })
-          this.test_result_list.push({ ...doc, GRADE: temp })
         })
-      })
+      } else {
+        this.$axios.get(`tests/subject/${this.subject_id}`).then((res) => {
+          this.test_result_list = res.data
+        })
+      }
     },
-
     fetchSubjectById() {
       this.$axios.get(`subjects/${this.subject_id}`).then((res) => {
         this.subject = res.data

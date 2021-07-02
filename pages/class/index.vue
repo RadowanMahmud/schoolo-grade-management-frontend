@@ -230,7 +230,15 @@ export default {
           })
       } else {
         this.$axios.get(`classes/users/${this.getUser.id}`).then((response) => {
-          this.classes = response.data
+          console.log(response.data)
+
+          response.data.forEach((data) => {
+            if (!this.classes.some((e) => e.id === data.id)) {
+              this.classes.push(data)
+            }
+          })
+
+          //    this.classes = response.data
           this.perPage = response.data.per_page
           this.totalRows = response.data.total
         })
