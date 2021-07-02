@@ -322,11 +322,6 @@ export default {
           this.users = temp.filter((u) => u.roles[0].name !== 'super_admin')
           this.perPage = response.data.per_page
           this.totalRows = response.data.total
-          // this.users.forEach((data) => {
-          //   console.log(
-          //     `username = ${data.username}, role=${data.roles[0].name}, id=${data.id}`
-          //   )
-          // })
         })
     },
     addUser() {

@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div
-      v-if="getUser.roles[0].name !== 'admin'"
-      class="main-content-container container-fluid px-4"
-    >
+    <div class="main-content-container container-fluid px-4">
       <div class="page-header row no-gutters py-4">
         <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
           <span class="text-uppercase page-subtitle">User Messages</span>
@@ -13,6 +10,7 @@
 
       <d-row align-h="end" class="mx-auto">
         <d-button
+          v-if="getUser.roles[0].name !== 'admin'"
           class="btn btn-primary mr-2 btn-md"
           theme="success"
           @click="show_grp_msg_dialog = true"
@@ -161,13 +159,6 @@
         </d-modal-body>
       </d-modal>
     </div>
-    <div v-else>
-      <div class="page-header row no-gutters py-4">
-        <div class="col-12 col-sm-4 text-center text-sm-left mb-0">
-          <h3 class="page-title">This feature is not for admin</h3>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -223,18 +214,37 @@ export default {
         })
     },
     fetchPersonalRecipients() {
-      this.$axios
-        .get(`users/${this.getUser.id}/messages/receivers`)
-        .then((response) => {
+      if (this.getUser.roles[0].name === 'admin') {
+        this.$axios.get('users').then((response) => {
+          console.log(response.data)
           response.data.forEach((data) => {
-            if (data.user.id !== this.getUser.id) {
+            if (data.id !== this.getUser.id) {
               this.personal_receiver_list.push({
-                value: data.user.id,
-                text: data.user.username,
+                value: data.id,
+                text: data.username,
               })
             }
           })
         })
+      } else {
+        this.$axios
+          .get(`users/${this.getUser.id}/messages/receivers`)
+          .then((response) => {
+            response.data.forEach((data) => {
+              if (
+                data.user.id !== this.getUser.id &&
+                !this.personal_receiver_list.some(
+                  (e) => e.value === data.user.id
+                )
+              ) {
+                this.personal_receiver_list.push({
+                  value: data.user.id,
+                  text: data.user.username,
+                })
+              }
+            })
+          })
+      }
     },
     fetchGrpRecipient() {
       this.$axios.get(`/subjects/users/${this.getUser.id}`).then((res) => {
