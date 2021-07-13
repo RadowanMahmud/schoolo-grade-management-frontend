@@ -141,10 +141,11 @@
         <h5 class="page-title text-dark">Subject Pupil List</h5>
         <d-row align-h="end" class="mx-auto">
           <a
+            v-if="getUser.roles[0].name !== 'pupil'"
             class="btn btn-info mr-2 mb-2 btn-sm"
             target="_blank"
             :href="getReportURL(`pdf/subject/${subject.id}/allpupils`)"
-            ><i class="bx bx-download mr-1"></i><b>Test Details</b>
+            ><i class="bx bx-download mr-1"></i><b>Grade List</b>
           </a>
         </d-row>
         <div class="card card-small mb-4 mt-2">

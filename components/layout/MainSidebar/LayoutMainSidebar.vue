@@ -11,15 +11,7 @@
   >
     <div class="main-navbar">
       <nav
-        class="
-          navbar
-          align-items-stretch
-          navbar-light
-          bg-white
-          flex-md-nowrap
-          border-bottom
-          p-0
-        "
+        class="navbar align-items-stretch navbar-light bg-white flex-md-nowrap border-bottom p-0"
       >
         <d-link
           class="navbar-brand w-100 mr-0"
