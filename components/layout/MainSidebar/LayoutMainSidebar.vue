@@ -178,6 +178,7 @@ export default {
     ...mapMutations(['storeUser', 'testFunction', 'setMessageCount']),
     logout() {
       clearInterval(this.interval)
+      //    this.$router.replace('/')
       this.$router.replace({ name: 'login' })
       this.storeUser(null)
     },

@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="subject && test_result_list"
+    v-if="subject && test_result_list && getUser"
     class="main-content-container container-fluid px-4"
   >
     <div class="page-header row no-gutters py-4">
@@ -15,10 +15,54 @@
     <d-row>
       <d-col cols="7">
         <h5 class="page-title text-dark">Test List</h5>
-        <AddTest
-          v-if="subject.type === 0 && $hasPermission('justTeacher')"
-          :subject-id="subject_id"
-        ></AddTest>
+        <AddTest :subject-id="subject_id"></AddTest>
+        <div v-if="subject.type === 0 && $hasPermission('justTeacher')">
+          <d-row align-h="end" class="mx-auto">
+            <d-button
+              v-if="this.$hasPermission('modifyTests')"
+              class="text-dark"
+              size="sm"
+              theme="success"
+              @click="testAddModal = true"
+            >
+              <i class="bx bx-plus mr-2"></i> Create
+            </d-button>
+          </d-row>
+          <d-modal
+            v-if="testAddModal"
+            :no-backdrop="true"
+            @close="testAddModal = false"
+          >
+            <d-modal-header>
+              <d-modal-title>Add Test</d-modal-title>
+            </d-modal-header>
+            <d-modal-body>
+              <div class="row pb-2 ml-2">
+                <span class="my-auto mr-2"><b> Test Name: </b></span>
+                <d-form-input
+                  v-model="testCreateForm.name"
+                  placeholder="Test name must be unique"
+                  required
+                />
+              </div>
+
+              <div class="row pb-2 ml-2">
+                <span class="my-auto mr-2"><b> Date: </b></span>
+                <date-picker
+                  v-model="testCreateForm.test_date"
+                  format="DD-MM-YYYY"
+                  :input-attr="{ required: true }"
+                  placeholder="Enter Date"
+                />
+              </div>
+
+              <div class="row pb-2 ml-2 mt-2" @click="saveTest">
+                <d-button>Submit</d-button>
+              </div>
+            </d-modal-body>
+          </d-modal>
+        </div>
+
         <div class="card card-small mb-4 mt-2">
           <div class="card-body p-0 pb-3 text-center">
             <table class="table mb-0">
@@ -204,6 +248,11 @@
 <script>
 import { mapGetters } from 'vuex'
 import AddTest from '~/components/test/AddTest'
+const testCreateFormTemplate = {
+  subject_id: '',
+  name: '',
+  test_date: null,
+}
 const testEditFormTemplate = {
   id: '',
   name: '',
@@ -227,6 +276,8 @@ export default {
       selectedTestForDelete: null,
       test_result_list: [],
       show_test_list: false,
+      testAddModal: false,
+      testCreateForm: { ...testCreateFormTemplate },
     }
   },
   computed: {
@@ -234,12 +285,36 @@ export default {
   },
   mounted() {
     this.subject_id = this.$route.params.subject_id
-    this.$root.$on('test-added', this.fetchTests)
+    //  this.$root.$on('test-added', this.fetchTests)
     this.fetchSubjectById()
     this.fetchTests()
   },
   methods: {
+    saveTest() {
+      console.log('test created 1')
+      this.testCreateForm.subject_id = this.subject.id
+      console.log('test created 2')
+      if (
+        this.testCreateForm.name !== '' &&
+        this.testCreateForm.test_date !== null
+      ) {
+        console.log('test created 3')
+        this.$axios.post('tests', this.testCreateForm).then((res) => {
+          console.log('test created 4')
+          // if (res.status === 201) {
+          this.testCreateForm = { ...testCreateFormTemplate }
+          console.log('test created 5')
+          this.testAddModal = false
+          console.log('test created 6')
+          this.fetchTests()
+          this.fetchSubjectById()
+          // this.$root.$emit('test-added')
+          //  }
+        })
+      }
+    },
     fetchTests() {
+      console.log(this.getUser)
       if (this.getUser.roles[0].name === 'pupil') {
         this.$axios.get(`/tests/users/${this.getUser.id}`).then((res) => {
           const tempArr = res.data.filter(

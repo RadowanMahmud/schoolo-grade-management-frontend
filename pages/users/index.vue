@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="$hasPermission('CreateUser')"
+    v-if="$hasPermission('CreateUser') && getUser"
     class="main-content-container container-fluid px-4"
   >
     <!-- Page Header -->
