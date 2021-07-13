@@ -65,7 +65,7 @@
             />
 
             <span v-if="item.title && item.title === 'Message'"
-              >{{ item.title }} ({{ msg_count }})</span
+              >{{ item.title }} ({{ getCount }})</span
             >
             <span v-else-if="item.title">{{ item.title }}</span>
             <div
@@ -158,7 +158,7 @@ export default {
       interval: null,
       duration: 15,
       timeUntilDismissed: 0,
-      msg_count: 0,
+      // msg_count: 0,
     }
   },
   created() {
@@ -169,13 +169,13 @@ export default {
     this.$nuxt.$on('toggle-sidebar')
   },
   computed: {
-    ...mapGetters(['getUser']),
+    ...mapGetters(['getUser', 'getCount']),
   },
   mounted() {
     this.msgSchedular()
   },
   methods: {
-    ...mapMutations(['storeUser', 'testFunction']),
+    ...mapMutations(['storeUser', 'testFunction', 'setMessageCount']),
     logout() {
       clearInterval(this.interval)
       this.$router.replace({ name: 'login' })
@@ -193,7 +193,8 @@ export default {
             if (response.data.length !== 0) {
               console.log('new message arrived')
               this.testFunction(response.data)
-              this.msg_count += response.data.length
+              //  this.msg_count += response.data.length
+              this.setMessageCount()
               this.timeUntilDismissed = this.duration
             } else {
               console.log('no new message')

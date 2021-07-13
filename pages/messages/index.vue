@@ -163,7 +163,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 const messageFormTemplate = {
   sender_id: '',
   receiver_id: '',
@@ -191,7 +191,6 @@ export default {
   mounted() {
     this.fetchPersonalRecipients()
     this.fetchGrpRecipient()
-
     this.getOldMessages()
     this.changeNewMsg()
   },
@@ -199,8 +198,10 @@ export default {
     clearInterval(this.dataMergeInterval)
   },
   methods: {
+    ...mapMutations(['setZero']),
     changeNewMsg() {
       this.dataMergeInterval = setInterval(() => {
+        this.setZero()
         this.new_msg_list =
           this.getNewMessages !== null ? [...this.getNewMessages] : []
       }, 600)
@@ -209,14 +210,13 @@ export default {
       this.$axios
         .get(`/users/${this.getUser.id}/messages/old`)
         .then((response) => {
-          //  console.log('new  =', response.data)
+          console.log('old  =', response.data)
           this.old_msg_list = response.data
         })
     },
     fetchPersonalRecipients() {
       if (this.getUser.roles[0].name === 'admin') {
         this.$axios.get('users').then((response) => {
-          console.log(response.data)
           response.data.forEach((data) => {
             if (data.id !== this.getUser.id) {
               this.personal_receiver_list.push({
@@ -244,6 +244,23 @@ export default {
               }
             })
           })
+        if (this.getUser.roles[0].name === 'teacher') {
+          this.$axios.get('users').then((response) => {
+            response.data.forEach((data) => {
+              console.log(data.roles[0].name)
+              if (
+                data.id === this.getUser.id ||
+                data.roles[0].name === 'pupil'
+              ) {
+              } else {
+                this.personal_receiver_list.push({
+                  value: data.id,
+                  text: data.username,
+                })
+              }
+            })
+          })
+        }
       }
     },
     fetchGrpRecipient() {

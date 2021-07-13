@@ -5,11 +5,13 @@ export const state = () => ({
   isActionRunning: false,
   messageInterval: null,
   newMessage: null,
+  messageCount: 0,
 })
 
 export const getters = {
   getUser: (state) => state.user,
   getNewMessages: (state) => state.newMessage,
+  getCount: (state) => state.messageCount,
 }
 export const mutations = {
   changeActionRunningState(state, status) {
@@ -26,5 +28,11 @@ export const mutations = {
   },
   testFunction(state, data) {
     state.newMessage = [...data]
+  },
+  setMessageCount(state) {
+    this.state.messageCount += 1
+  },
+  setZero(state) {
+    this.state.messageCount = 0
   },
 }
